@@ -1,4 +1,4 @@
-package com.example.mapengineering;
+package com.example.mapengineering.model;
 
 import java.io.Serializable;
 

@@ -2,11 +2,14 @@ package com.example.mapengineering;
 
 import java.util.List;
 
+import com.example.mapengineering.model.DataModel;
+import com.example.mapengineering.view.dataViewAdapter;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
-public class myListBaseView extends Activity{
+public class ListBaseAcitivity extends Activity{
 	
 	private ListView listview;
 	private List<DataModel> data;

@@ -1,55 +1,76 @@
 package com.example.mapengineering;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.Activity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.net.Uri;
+import android.nfc.tech.MifareClassic;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TabWidget;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
-	private EditText zhuanghaoEdit;
-	private EditText qianshiEdit;
-	private EditText zhongshiEdit;
-	private EditText houshiEdit;
-	private Button nextButton;
-	private Button chakanshuju;
-	
-	private List<DataModel> dataList;
-	
+	private FragmentTabHost  tabHost;
+	public static ArrayList<ActivityStack> fragmentStacks;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
+		this.initTabhost();
 		
-		dataList = new ArrayList<DataModel>();
+		ExpressApplication.getInstance().addActivity(this);
+	}
+	
+	/**
+	 * 初始化选项卡
+	 */
+	private void initTabhost() {
 		
-		zhuanghaoEdit = (EditText)findViewById(R.id.zhuanghao);
-		qianshiEdit = (EditText)findViewById(R.id.qianshi);
-		zhongshiEdit = (EditText)findViewById(R.id.zhongshi);
-		houshiEdit = (EditText)findViewById(R.id.houshi);
+		fragmentStacks=new ArrayList<ActivityStack>();
 		
-		nextButton = (Button)findViewById(R.id.nextPoint);
-		nextButton.setOnClickListener(new nextButton());
+		tabHost=(FragmentTabHost)findViewById(android.R.id.tabhost);
+		tabHost.setup(MainActivity.this, getSupportFragmentManager());
 		
-		chakanshuju = (Button)findViewById(R.id.chakan);
-		chakanshuju.setOnClickListener(new OnClickListener() {
+		TabWidget mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
+		mTabWidget.setBackgroundColor(Color.WHITE);
+//		 if(Build.VERSION.SDK_INT >= 11){
+//			 mTabWidget.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+//        }
+		mTabWidget.setGravity(Gravity.CENTER_VERTICAL);
 			
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(MainActivity.this, myListBaseView.class);
-				intent.putExtra("data", (Serializable)dataList); 
-				startActivity(intent);
-			}
-		});
+		View view_take=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_record, null);
+		View view_search=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_measure, null);
+		
+		tabHost.addTab(tabHost.newTabSpec("take").setIndicator(view_take), MeasureFragment.class,null);
+		tabHost.addTab(tabHost.newTabSpec("search").setIndicator(view_search), RecordFragment.class,null);
 	}
 
 	@Override
@@ -59,35 +80,4 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	class nextButton implements OnClickListener{
-
-		@Override
-		public void onClick(View arg0) {
-			DataModel dataModel = new DataModel();
-			dataModel.setZhuanghao(zhuanghaoEdit.getText().toString());
-			dataModel.setQianshi(qianshiEdit.getText().toString());
-			dataModel.setZhongshi(zhongshiEdit.getText().toString());
-			dataModel.setHoushi(houshiEdit.getText().toString());
-			
-			zhuanghaoEdit.setText("");
-			qianshiEdit.setText("");
-			zhongshiEdit.setText("");
-			houshiEdit.setText("");
-			
-			dataList.add(dataModel);
-		}
-		
-	}
 }

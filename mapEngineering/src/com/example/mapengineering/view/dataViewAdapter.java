@@ -1,6 +1,11 @@
-package com.example.mapengineering;
+package com.example.mapengineering.view;
 
 import java.util.List;
+
+import com.example.mapengineering.R;
+import com.example.mapengineering.R.id;
+import com.example.mapengineering.R.layout;
+import com.example.mapengineering.model.DataModel;
 
 import android.content.Context;
 import android.view.LayoutInflater;

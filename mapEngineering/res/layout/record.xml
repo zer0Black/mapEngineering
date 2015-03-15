@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".RecordFragment" >
+
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:orientation="vertical"
+        android:background="@drawable/top_n">
+        
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="37dp">
+        
+        <RelativeLayout 
+            android:id="@+id/rltitle1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+	        <TextView 
+	            android:id="@+id/txttitle1_send"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerInParent="true"
+	            android:text="已完成测量"
+	            android:textColor="#686868"/>
+        </RelativeLayout>
+        
+        <RelativeLayout 
+            android:id="@+id/rltitle2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+	        <TextView 
+	            android:id="@+id/txttitle2_send"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerInParent="true"
+	            android:text="未完成测量"
+	            android:textColor="#686868"/>
+	    </RelativeLayout>
+        
+   </LinearLayout>
+        
+    <ImageView 
+        android:id="@+id/cursor_send"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="matrix"
+        android:src="@drawable/a"/>
+    </LinearLayout>
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpage"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:flipInterval="30"
+        android:persistentDrawingCache="animation">
+            
+    </android.support.v4.view.ViewPager>
+</LinearLayout>
