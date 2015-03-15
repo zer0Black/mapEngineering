@@ -1,16 +1,55 @@
 package com.example.mapengineering;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
+	private EditText zhuanghaoEdit;
+	private EditText qianshiEdit;
+	private EditText zhongshiEdit;
+	private EditText houshiEdit;
+	private Button nextButton;
+	private Button chakanshuju;
+	
+	private List<DataModel> dataList;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		dataList = new ArrayList<DataModel>();
+		
+		zhuanghaoEdit = (EditText)findViewById(R.id.zhuanghao);
+		qianshiEdit = (EditText)findViewById(R.id.qianshi);
+		zhongshiEdit = (EditText)findViewById(R.id.zhongshi);
+		houshiEdit = (EditText)findViewById(R.id.houshi);
+		
+		nextButton = (Button)findViewById(R.id.nextPoint);
+		nextButton.setOnClickListener(new nextButton());
+		
+		chakanshuju = (Button)findViewById(R.id.chakan);
+		chakanshuju.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(MainActivity.this, myListBaseView.class);
+				intent.putExtra("data", (Serializable)dataList); 
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -30,5 +69,25 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	class nextButton implements OnClickListener{
+
+		@Override
+		public void onClick(View arg0) {
+			DataModel dataModel = new DataModel();
+			dataModel.setZhuanghao(zhuanghaoEdit.getText().toString());
+			dataModel.setQianshi(qianshiEdit.getText().toString());
+			dataModel.setZhongshi(zhongshiEdit.getText().toString());
+			dataModel.setHoushi(houshiEdit.getText().toString());
+			
+			zhuanghaoEdit.setText("");
+			qianshiEdit.setText("");
+			zhongshiEdit.setText("");
+			houshiEdit.setText("");
+			
+			dataList.add(dataModel);
+		}
+		
 	}
 }
