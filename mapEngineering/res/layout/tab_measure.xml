@@ -13,7 +13,7 @@
 	    <ImageView 
 	        android:id="@+id/imgtabtitle"
 	        android:layout_centerInParent="true"
-	        android:src="@drawable/tab_back_send"
+	        android:src="@drawable/tab_back_measure"
 	        android:layout_height="24dp"
 	        android:layout_width="29dp"/>
 	</RelativeLayout>

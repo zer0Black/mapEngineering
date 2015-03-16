@@ -2,78 +2,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#ffffff"
+    tools:context=".MainActivity" >
 
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="桩号"
-        />
-    
-    <EditText android:id="@+id/zhuanghao"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="前视"
-        />
-    
-    <EditText android:id="@+id/qianshi"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="中视"
-        />
-    
-    <EditText android:id="@+id/zhongshi"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="后视"
-        />
-    
-    <EditText android:id="@+id/houshi"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
+    <RelativeLayout 
+        android:layout_width="fill_parent"
+        android:background="#2d2d31"
+        android:layout_height="40dp">
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:text="测量助手"/>
+    </RelativeLayout>
 
-    <Button android:id="@+id/nextPoint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="下一个点"/>
+    <FrameLayout 
+		      	android:id="@+id/realtabcontent"
+		      	android:layout_width="fill_parent"
+		      	android:layout_height="0dp"
+		      	android:layout_weight="1"></FrameLayout>
     
-    <Button android:id="@+id/chakan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="查看输入数据"/>
+     <android.support.v4.app.FragmentTabHost
+         android:id="@android:id/tabhost"
+         android:layout_width="fill_parent"
+         android:layout_height="50dp">
+
+         <TabWidget 
+          	android:id="@android:id/tabs"
+          	android:layout_width="fill_parent"
+          	android:layout_height="wrap_content"></TabWidget>
+     </android.support.v4.app.FragmentTabHost>
     
 </LinearLayout>

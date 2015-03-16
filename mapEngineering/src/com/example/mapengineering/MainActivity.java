@@ -57,20 +57,21 @@ public class MainActivity extends FragmentActivity {
 		fragmentStacks=new ArrayList<ActivityStack>();
 		
 		tabHost=(FragmentTabHost)findViewById(android.R.id.tabhost);
-		tabHost.setup(MainActivity.this, getSupportFragmentManager());
+		tabHost.setup(MainActivity.this, getSupportFragmentManager(), R.id.realtabcontent);
 		
 		TabWidget mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
 		mTabWidget.setBackgroundColor(Color.WHITE);
-//		 if(Build.VERSION.SDK_INT >= 11){
-//			 mTabWidget.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
-//        }
+		 if(Build.VERSION.SDK_INT >= 11){
+			 mTabWidget.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+        }
 		mTabWidget.setGravity(Gravity.CENTER_VERTICAL);
-			
-		View view_take=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_record, null);
-		View view_search=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_measure, null);
 		
-		tabHost.addTab(tabHost.newTabSpec("take").setIndicator(view_take), MeasureFragment.class,null);
-		tabHost.addTab(tabHost.newTabSpec("search").setIndicator(view_search), RecordFragment.class,null);
+		View view_measure=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_measure, null);
+		View view_record=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_record, null);
+		
+		
+		tabHost.addTab(tabHost.newTabSpec("measure").setIndicator(view_measure), MeasureFragment.class,null);
+		tabHost.addTab(tabHost.newTabSpec("record").setIndicator(view_record), RecordFragment.class,null);
 	}
 
 	@Override

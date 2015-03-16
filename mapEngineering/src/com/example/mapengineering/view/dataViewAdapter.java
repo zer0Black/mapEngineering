@@ -60,10 +60,6 @@ public class dataViewAdapter extends BaseAdapter {
              holder = (ViewHolder)convertView.getTag();
          }
 		 
-		 System.out.println("---1---");
-		 
-		 System.out.println((String)dataList.get(position).getZhuanghao());
-		 
 		 holder.cedian.setText((String)dataList.get(position).getZhuanghao());
 		 holder.qianshi.setText((String)dataList.get(position).getQianshi());
 		 holder.zhongshi.setText((String)dataList.get(position).getZhongshi());

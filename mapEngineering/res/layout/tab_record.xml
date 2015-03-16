@@ -13,7 +13,7 @@
 	    <ImageView 
 	        android:id="@+id/imgtabtitle"
 	        android:layout_centerInParent="true"
-	        android:src="@drawable/tab_back_take"
+	        android:src="@drawable/tab_back_record"
 	        android:layout_height="24dp"
 	        android:layout_width="29dp"/>
 	</RelativeLayout>
@@ -26,5 +26,5 @@
 	    android:layout_marginRight="5dp"
 	    android:layout_gravity="center_horizontal"
 	    android:textColor="@drawable/tab_color_text"
-	    android:text="快递代取"/>
+	    android:text="测量"/>
 </LinearLayout>
