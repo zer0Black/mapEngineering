@@ -4,4 +4,61 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <EditText android:id="@+id/manCode_one" 
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et2"
+        android:hint="请填写人员代码"/>
+    
+    <EditText android:id="@+id/manCode_two" 
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et2"
+        android:hint="请填写人员代码"/>
+    
+    <EditText android:id="@+id/manCode_three" 
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et2"
+        android:hint="请填写人员代码"/>
+    
+    <EditText android:id="@+id/instrumentCode" 
+		android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et2"
+        android:hint="请填写仪器号"/>
+    
+     <EditText android:id="@+id/instrumentCode" 
+		android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/et2"
+        android:hint="请填写仪器号"/>
+    
+   <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox_selector"
+            android:checked="true"
+            android:paddingLeft="20dp"
+            android:text="复测"
+            android:textSize="20dp" />
+        
+    </LinearLayout>
+    
 </LinearLayout>

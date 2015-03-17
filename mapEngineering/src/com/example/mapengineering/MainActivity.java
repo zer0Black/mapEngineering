@@ -46,12 +46,9 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		this.initTabhost();
 		
-		ExpressApplication.getInstance().addActivity(this);
+//		ExpressApplication.getInstance().addActivity(this);
 	}
 	
-	/**
-	 * 初始化选项卡
-	 */
 	private void initTabhost() {
 		
 		fragmentStacks=new ArrayList<ActivityStack>();
@@ -59,16 +56,15 @@ public class MainActivity extends FragmentActivity {
 		tabHost=(FragmentTabHost)findViewById(android.R.id.tabhost);
 		tabHost.setup(MainActivity.this, getSupportFragmentManager(), R.id.realtabcontent);
 		
-		TabWidget mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
-		mTabWidget.setBackgroundColor(Color.WHITE);
-		 if(Build.VERSION.SDK_INT >= 11){
-			 mTabWidget.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
-        }
-		mTabWidget.setGravity(Gravity.CENTER_VERTICAL);
+//		TabWidget mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
+//		mTabWidget.setBackgroundColor(Color.WHITE);
+//		 if(Build.VERSION.SDK_INT >= 11){
+//			 mTabWidget.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+//        }
+//		mTabWidget.setGravity(Gravity.CENTER_VERTICAL);
 		
 		View view_measure=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_measure, null);
 		View view_record=LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_record, null);
-		
 		
 		tabHost.addTab(tabHost.newTabSpec("measure").setIndicator(view_measure), MeasureFragment.class,null);
 		tabHost.addTab(tabHost.newTabSpec("record").setIndicator(view_record), RecordFragment.class,null);
@@ -76,7 +72,6 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}

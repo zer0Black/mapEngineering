@@ -26,5 +26,5 @@
 	    android:layout_marginRight="5dp"
 	    android:layout_gravity="center_horizontal"
 	    android:textColor="@drawable/tab_color_text"
-	    android:text="测量"/>
+	    android:text="记录"/>
 </LinearLayout>

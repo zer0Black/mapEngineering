@@ -49,7 +49,7 @@ public class dataViewAdapter extends BaseAdapter {
              
              holder=new ViewHolder();  
               
-             convertView = mInflater.inflate(R.layout.testview, null);
+             convertView = mInflater.inflate(R.layout.measure_data_detail, null);
              holder.cedian = (TextView)convertView.findViewById(R.id.cedianT);
              holder.qianshi = (TextView)convertView.findViewById(R.id.qianshiT);
              holder.zhongshi = (TextView)convertView.findViewById(R.id.zhongshiT);

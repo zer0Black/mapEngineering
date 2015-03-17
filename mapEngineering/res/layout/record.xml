@@ -23,7 +23,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1">
 	        <TextView 
-	            android:id="@+id/txttitle1_send"
+	            android:id="@+id/txttitle1"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_centerInParent="true"
@@ -37,7 +37,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1">
 	        <TextView 
-	            android:id="@+id/txttitle2_send"
+	            android:id="@+id/txttitle2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_centerInParent="true"
@@ -48,7 +48,7 @@
    </LinearLayout>
         
     <ImageView 
-        android:id="@+id/cursor_send"
+        android:id="@+id/cursor"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:scaleType="matrix"
