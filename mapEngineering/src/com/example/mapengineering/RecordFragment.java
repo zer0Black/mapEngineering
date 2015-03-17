@@ -53,10 +53,10 @@ public class RecordFragment extends Fragment {
 			Bundle savedInstanceState) {
 		layoutView = inflater.inflate(R.layout.record, null);
 		
-		this.initViewPager();
 		this.initImageView();
 		this.initTextView();
 		this.initTitleRl();
+		this.initViewPager();
 		
 		return layoutView;
 	}
@@ -68,8 +68,8 @@ public class RecordFragment extends Fragment {
 		viewPager = (ViewPager) layoutView.findViewById(R.id.vpage);
 		views = new ArrayList<View>();
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		view = inflater.inflate(R.layout.complete_record_detail, null);
-		view2 = inflater.inflate(R.layout.uncomplete_record_detail, null);
+		view = inflater.inflate(R.layout.complete_record, null);
+		view2 = inflater.inflate(R.layout.uncomplete_record, null);
 		views.add(view);
 		views.add(view2);
 		viewPagerAdapter = new ViewPagerAdapter(views);
@@ -93,6 +93,7 @@ public class RecordFragment extends Fragment {
 		Matrix matrix = new Matrix();
 		matrix.postTranslate(offset, 0);
 		imageView.setImageMatrix(matrix);// 设置动画初始位置
+		System.out.println("=======initImageView===========");
 	}
 	
 	/**
