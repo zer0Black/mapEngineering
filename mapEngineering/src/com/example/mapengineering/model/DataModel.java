@@ -1,36 +1,63 @@
 package com.example.mapengineering.model;
 
-import java.io.Serializable;
+public class DataModel {
 
-public class DataModel implements Serializable{
-
-	private String zhuanghao;
-	private String qianshi;
-	private String zhongshi;
-	private String houshi;
+	private String Date;
+	private String startTime;
+	private String endTime;
+	private String manCodeOne;
+	private String manCodeTwo;
+	private String manCodeThree;
+	private int measureStyle;
+	private Boolean isAgainMeasure;
 	
-	public String getZhuanghao() {
-		return zhuanghao;
+	public String getDate() {
+		return Date;
 	}
-	public void setZhuanghao(String zhuanghao) {
-		this.zhuanghao = zhuanghao;
+	public void setDate(String date) {
+		Date = date;
 	}
-	public String getQianshi() {
-		return qianshi;
+	public String getStartTime() {
+		return startTime;
 	}
-	public void setQianshi(String qianshi) {
-		this.qianshi = qianshi;
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
-	public String getZhongshi() {
-		return zhongshi;
+	public String getEndTime() {
+		return endTime;
 	}
-	public void setZhongshi(String zhongshi) {
-		this.zhongshi = zhongshi;
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
-	public String getHoushi() {
-		return houshi;
+	public String getManCodeOne() {
+		return manCodeOne;
 	}
-	public void setHoushi(String houshi) {
-		this.houshi = houshi;
+	public void setManCodeOne(String manCodeOne) {
+		this.manCodeOne = manCodeOne;
 	}
+	public String getManCodeTwo() {
+		return manCodeTwo;
+	}
+	public void setManCodeTwo(String manCodeTwo) {
+		this.manCodeTwo = manCodeTwo;
+	}
+	public String getManCodeThree() {
+		return manCodeThree;
+	}
+	public void setManCodeThree(String manCodeThree) {
+		this.manCodeThree = manCodeThree;
+	}
+	public int getMeasureStyle() {
+		return measureStyle;
+	}
+	public void setMeasureStyle(int measureStyle) {
+		this.measureStyle = measureStyle;
+	}
+	public Boolean getIsAgainMeasure() {
+		return isAgainMeasure;
+	}
+	public void setIsAgainMeasure(Boolean isAgainMeasure) {
+		this.isAgainMeasure = isAgainMeasure;
+	}
+	
 }

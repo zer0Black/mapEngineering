@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.mapengineering.R;
 import com.example.mapengineering.R.id;
 import com.example.mapengineering.R.layout;
-import com.example.mapengineering.model.DataModel;
+import com.example.mapengineering.model.DataDetailModel;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,9 +17,9 @@ import android.widget.TextView;
 public class dataViewAdapter extends BaseAdapter {
 
 	private LayoutInflater mInflater;
-	private List<DataModel> dataList;
+	private List<DataDetailModel> dataList;
 	
-	public dataViewAdapter(Context context, List<DataModel> data){
+	public dataViewAdapter(Context context, List<DataDetailModel> data){
 		this.mInflater = LayoutInflater.from(context);
 		dataList = data;
 	}

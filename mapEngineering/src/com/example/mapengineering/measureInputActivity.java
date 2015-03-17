@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.mapengineering.model.DataModel;
+import com.example.mapengineering.model.DataDetailModel;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,14 +25,14 @@ public class measureInputActivity extends Activity {
 	private Button nextButton;
 	private Button chakanshuju;
 	
-	private List<DataModel> dataList;
+	private List<DataDetailModel> dataList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_measure);
 		
-		dataList = new ArrayList<DataModel>();
+		dataList = new ArrayList<DataDetailModel>();
 		
 		zhuanghaoEdit = (EditText)findViewById(R.id.zhuanghao);
 		qianshiEdit = (EditText)findViewById(R.id.qianshi);
@@ -77,7 +77,7 @@ public class measureInputActivity extends Activity {
 
 		@Override
 		public void onClick(View arg0) {
-			DataModel dataModel = new DataModel();
+			DataDetailModel dataModel = new DataDetailModel();
 			dataModel.setZhuanghao(zhuanghaoEdit.getText().toString());
 			dataModel.setQianshi(qianshiEdit.getText().toString());
 			dataModel.setZhongshi(zhongshiEdit.getText().toString());

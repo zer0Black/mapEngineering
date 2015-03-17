@@ -2,7 +2,7 @@ package com.example.mapengineering;
 
 import java.util.List;
 
-import com.example.mapengineering.model.DataModel;
+import com.example.mapengineering.model.DataDetailModel;
 import com.example.mapengineering.view.dataViewAdapter;
 
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.widget.ListView;
 public class ListBaseAcitivity extends Activity{
 	
 	private ListView listview;
-	private List<DataModel> data;
+	private List<DataDetailModel> data;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,7 +20,7 @@ public class ListBaseAcitivity extends Activity{
 		
 		listview = (ListView)findViewById(R.id.dataList);
 		
-		data = (List<DataModel>)getIntent().getSerializableExtra("data"); 
+		data = (List<DataDetailModel>)getIntent().getSerializableExtra("data"); 
 		System.out.println("11="+data.get(0).getZhuanghao());
 		dataViewAdapter adapter = new dataViewAdapter(this, data);  
 		System.out.println("---12---");

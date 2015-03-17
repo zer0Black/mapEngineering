@@ -48,8 +48,6 @@ public class MeasureFragment extends Fragment {
 	private View layoutView;
 	FragmentManager fManager;
 
-	
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
