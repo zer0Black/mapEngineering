@@ -3,11 +3,21 @@ package com.example.mapengineering;
 import java.text.DateFormat;
 import java.util.Date;
 
+import com.example.mapengineering.data.DatabaseHelper;
+import com.example.mapengineering.util.Uid;
+import com.example.mapengineering.util.constants;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.style.TtsSpan.MeasureBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,12 +39,14 @@ public class MeasureFragment extends Fragment {
 	
 	private View layoutView;
 	FragmentManager fManager;
-
+	private SharedPreferences mPreferences;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		fManager = getChildFragmentManager();
 		MainActivity.fragmentStacks.add(new ActivityStack(fManager));
+		mPreferences=getActivity().getSharedPreferences(constants.UID, getActivity().MODE_PRIVATE);
 	}
 
 	@Override
@@ -70,7 +82,7 @@ public class MeasureFragment extends Fragment {
 						public void onClick(
 								DialogInterface dialog,
 								int which) {
-							
+							storeDataToSql();
 						}
 					})
 			.setNegativeButton("取消",
@@ -93,6 +105,12 @@ public class MeasureFragment extends Fragment {
 		String manCodeThree = manCodeThreeEdit.getText().toString();
 		String instrumentCode = instrumentCodeEdit.getText().toString();
 		Boolean isAgainMeasure = checkBox.isChecked();
+		int againMeasure;
+		if (isAgainMeasure) {
+			againMeasure = 1;
+		}else{
+			againMeasure = 0;
+		}
 		
 		if (manCodeOne == null || manCodeOne.length() == 0
 				|| manCodeTwo == null || manCodeTwo.length() == 0
@@ -112,10 +130,34 @@ public class MeasureFragment extends Fragment {
 		String date = dateSplit[0];
 		String startTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
 		
+		long uid = Uid.next();
+		String uidString = uid+"";
+		
 		int measureType = 6;//代表中平
 		int flag = 0;//0代表测量未完成
-		//存入数据库
 		
+		//把ID存入首选项
+		Editor editor=mPreferences.edit();
+		editor.putString(constants.IDCODER, uidString).commit();
+		//存入数据库
+		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, againMeasure, flag);
+	
+		Intent intent = new Intent(getActivity(), measureInputActivity.class);
+		startActivity(intent);
+	}
+	
+	private void save(String uid, String date, String startTime, String mancodeOne, 
+			String mancodeTwo, String mancodeThree, int measureType,
+			int againMeasure, int flag){
+		DatabaseHelper databaseHelper = new DatabaseHelper(this.getActivity());
+		SQLiteDatabase db = databaseHelper.getWritableDatabase();
+		db.execSQL("insert into measure_data(ID, date, startTime ,mancodeOne," +
+				"mancodeTwo, mancodeThree, measureType, againMeasure, flag)" +
+				"values(?,?,?,?,?,?,?,?,?)", new Object[]{uid,
+			date, startTime, mancodeOne, mancodeTwo, mancodeThree, 
+			measureType, againMeasure, flag});
+		
+		db.close();
 	}
 	
 }
