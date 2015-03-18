@@ -1,5 +1,6 @@
 package com.example.mapengineering;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import android.app.AlertDialog;
@@ -103,9 +104,18 @@ public class MeasureFragment extends Fragment {
 			Toast.makeText(getActivity(), "请输入仪器代码", Toast.LENGTH_LONG).show();
 		}
 		
+		//获取日期和当前时间
 		Date now = new Date(); 
-//		String Date = ;
+		DateFormat d1 = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
+		String DateFormat = d1.format(now);
+		String dateSplit[] = DateFormat.split(" ");
+		String date = dateSplit[0];
+		String startTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
+		
+		int measureType = 6;//代表中平
+		int flag = 0;//0代表测量未完成
 		//存入数据库
+		
 	}
 	
 }
