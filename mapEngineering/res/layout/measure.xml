@@ -35,12 +35,6 @@
         android:background="@drawable/et2"
         android:hint="请填写仪器号"/>
     
-     <EditText android:id="@+id/instrumentCode" 
-		android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/et2"
-        android:hint="请填写仪器号"/>
     
    <LinearLayout
         android:layout_width="match_parent"
@@ -68,11 +62,9 @@
 		android:layout_weight="0.1"
 		android:gravity="bottom"
 		android:orientation="vertical" >
-		<Button
+		<Button android:id="@+id/startMeasure"
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
 			android:layout_marginBottom="0dp"
 			android:text="开始测量" />
     

@@ -23,7 +23,7 @@ public class measureInputActivity extends Activity {
 	private EditText zhongshiEdit;
 	private EditText houshiEdit;
 	private Button nextButton;
-	private Button chakanshuju;
+	private Button finishMeasure;
 	
 	private List<DataDetailModel> dataList;
 	
@@ -42,14 +42,14 @@ public class measureInputActivity extends Activity {
 		nextButton = (Button)findViewById(R.id.nextPoint);
 		nextButton.setOnClickListener(new nextButton());
 		
-		chakanshuju = (Button)findViewById(R.id.chakan);
-		chakanshuju.setOnClickListener(new OnClickListener() {
+		finishMeasure = (Button)findViewById(R.id.finishMeasure);
+		finishMeasure.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(measureInputActivity.this, ListBaseAcitivity.class);
-				intent.putExtra("data", (Serializable)dataList); 
-				startActivity(intent);
+//				Intent intent = new Intent(measureInputActivity.this, ListBaseAcitivity.class);
+//				intent.putExtra("data", (Serializable)dataList); 
+//				startActivity(intent);
 			}
 		});
 	}

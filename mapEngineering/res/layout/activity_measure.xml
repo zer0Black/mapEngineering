@@ -4,76 +4,83 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="桩号"
-        />
+    <RelativeLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="#2d2d31">
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="#ffffff"
+                android:textSize="18dp"
+                android:text="输入数据"/>
+            
+            <Button android:id="@+id/chakanshuju"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textSize="14dp"
+                android:textColor="#ffffff"
+                android:text="查看数据"/>
+                
+        </RelativeLayout>
+    
+  
     
     <EditText android:id="@+id/zhuanghao"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="前视"
+        android:hint="请输入里程"
+        android:background="@drawable/et2"
         />
     
     <EditText android:id="@+id/qianshi"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="中视"
+        android:hint="请输入前视数据"
+        android:background="@drawable/et2"
         />
     
     <EditText android:id="@+id/zhongshi"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:background="@drawable/et"
-        />
-    
-        <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textSize="20dp"
-        android:text="后视"
+        android:hint="请输入中式数据"
+        android:background="@drawable/et2"
         />
     
     <EditText android:id="@+id/houshi"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
-        android:background="@drawable/et"
+        android:hint="请输入视数据"
+        android:background="@drawable/et2"
         />
 
     <Button android:id="@+id/nextPoint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="下一个点"/>
+        android:text="完成输入"/>
     
-    <Button android:id="@+id/chakan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="查看输入数据"/>
+    
+    <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:layout_weight="0.1"
+		android:gravity="bottom"
+		android:orientation="vertical" >
+		<Button android:id="@+id/finishMeasure"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:layout_marginBottom="0dp"
+			android:textColor="#ff0000"
+			android:text="完成测量" />
+    
+	</LinearLayout>
     
 </LinearLayout>

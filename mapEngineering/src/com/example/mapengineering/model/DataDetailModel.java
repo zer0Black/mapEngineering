@@ -4,25 +4,12 @@ import java.io.Serializable;
 
 public class DataDetailModel implements Serializable{
 
-	private String startPoint;
-	private String endPoint;
 	private String zhuanghao;
 	private String qianshi;
 	private String zhongshi;
 	private String houshi;
 	
-	public String getStartPoint() {
-		return startPoint;
-	}
-	public void setStartPoint(String startPoint) {
-		this.startPoint = startPoint;
-	}
-	public String getEndPoint() {
-		return endPoint;
-	}
-	public void setEndPoint(String endPoint) {
-		this.endPoint = endPoint;
-	}
+
 	public String getZhuanghao() {
 		return zhuanghao;
 	}

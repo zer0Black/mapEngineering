@@ -17,10 +17,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE measure_data (ID integer primary key autoincrement, " +
-				"data varchar(30), mancodeOne varchar(15)," +
-				"mancodeTwo varchar(15), mancodeThree varchar(15), flag int)");
-		
+		db.execSQL("CREATE TABLE measure_data (ID varcha(30) primary key, " +
+				"date varchar(15), startTime varchar(15), endTime varchar(15), " +
+				"mancodeOne varchar(15), mancodeTwo varchar(15), mancodeThree varchar(15)," +
+				" startPoint varchar(30), endPoint varchar(30), measureType int," +
+				"againMeasure int, flag int)");
+		db.execSQL("CREATE TABLE measure_data_detail (ID varcha(30) primary key, " +
+				"zhuanghao varchar(20), qianshi varchar(20)," +
+				"zhongshi varchar(20), houshi varchar(20))");
 	}
 
 	@Override
