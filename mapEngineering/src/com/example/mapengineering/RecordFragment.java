@@ -3,8 +3,13 @@ package com.example.mapengineering;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.mapengineering.data.DatabaseHelper;
+import com.example.mapengineering.model.DataModel;
+import com.example.mapengineering.view.CompleteDataAdapter;
 import com.example.mapengineering.view.ViewPagerAdapter;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -21,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,12 +46,20 @@ public class RecordFragment extends Fragment {
 	RelativeLayout rltitle1,rltitle2;
 	ViewPagerAdapter viewPagerAdapter;
 	
+	CompleteDataAdapter completeDataAdapter;
+	List<DataModel> completeList = new ArrayList<DataModel>();
+	
+	ListView completeListView;
+	
+	DatabaseHelper databaseHelper;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		fManager = getChildFragmentManager();
 		MainActivity.fragmentStacks.add(new ActivityStack(fManager));
+		
+		databaseHelper = new DatabaseHelper(getActivity());
 	}
 
 	@Override
@@ -76,7 +90,65 @@ public class RecordFragment extends Fragment {
 		viewPager.setAdapter(viewPagerAdapter);
 		viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
 		viewPager.setCurrentItem(0);
+		
+		this.initCompletePage();
 	}
+	
+	private void initCompletePage() {
+		completeDataAdapter = new CompleteDataAdapter(getActivity(), completeList);
+		completeListView = (ListView)view.findViewById(R.id.complete_dataList);
+		completeListView.setAdapter(completeDataAdapter);
+		this.initCompleteData();
+	}
+	
+	private void initCompleteData() {
+		completeList.clear();
+		
+		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select startTime, againMeasure, measureType from measure_data", new String[]{});
+		
+		while(cursor.moveToNext()){
+			DataModel dataModel = new DataModel();
+			
+			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
+			Boolean isAgain = null;
+			if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 0) {
+				isAgain = false;
+			}else if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 1) {
+				isAgain = true;
+			}
+			
+			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
+				
+			dataModel.setStartTime(starttime);
+			dataModel.setIsAgainMeasure(isAgain);
+			dataModel.setMeasureType(measureType);
+			
+			completeList.add(dataModel);
+		}
+		cursor.close();
+		completeDataAdapter.notifyDataSetChanged();
+	}
+	
+//	private void initUnCompletePage() {
+//		currOrderAdapter = new CurrOrderAdapter(getActivity(), curOrderList);
+//		
+//		progressBar = (ProgressBar) view.findViewById(R.id.progressbar_take);
+//		imgBtnLaunchTake = (ImageView) view.findViewById(R.id.imgbtnCallTake);
+//		
+//		lsvCurrTake = (ListView) view.findViewById(R.id.lsvCurTake);
+//		ll_index = (LinearLayout) view.findViewById(R.id.il_index);
+//		
+//		if (curOrderList.size()>0) {
+//			ll_index.setVisibility(ListView.GONE);
+//			lsvCurrTake.setVisibility(ListView.VISIBLE);
+//		}
+//		// lsvCurrTake.setSelector(R.drawable.curtakebgshape);
+//		lsvCurrTake.setAdapter(currOrderAdapter);
+//		this.setControlEvents();
+//		this.initTakeCurrData();
+//	}
+
 
 	/**
 	 * 初始化页卡指示图片

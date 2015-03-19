@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.mapengineering.ListBaseAcitivity"></activity>
+        <activity android:name="com.example.mapengineering.CompleteDetailListAcitivity"></activity>
         <activity android:name="com.example.mapengineering.measureInputActivity"></activity>
     </application>
 

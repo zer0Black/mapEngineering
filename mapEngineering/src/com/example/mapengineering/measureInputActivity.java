@@ -32,7 +32,7 @@ public class measureInputActivity extends Activity {
 	private Button chakanshuju;
 	
 	private SharedPreferences mPreferences;
-	private List<DataDetailModel> dataList;
+//	private List<DataDetailModel> dataList;
 	DatabaseHelper databaseHelper;
 	
 	@Override
@@ -41,7 +41,8 @@ public class measureInputActivity extends Activity {
 		setContentView(R.layout.activity_measure);
 		mPreferences=getSharedPreferences(constants.UID, MODE_PRIVATE);
 		
-		dataList = new ArrayList<DataDetailModel>();
+		databaseHelper = new DatabaseHelper(getApplicationContext());
+//		dataList = new ArrayList<DataDetailModel>();
 		
 		zhuanghaoEdit = (EditText)findViewById(R.id.zhuanghao);
 		qianshiEdit = (EditText)findViewById(R.id.qianshi);
@@ -56,7 +57,6 @@ public class measureInputActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				databaseHelper = new DatabaseHelper(getApplicationContext());
 				SQLiteDatabase db = databaseHelper.getWritableDatabase();
 				String uid = mPreferences.getString(constants.IDCODER, "");
 				
@@ -74,6 +74,8 @@ public class measureInputActivity extends Activity {
 				//把结束时间，起始点，结束点插入表
 				db.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=? where ID=?",
 						new Object[]{endTime, startPoint, endPoint, uid});
+				
+				db.close();
 			}
 		});
 		
@@ -99,6 +101,7 @@ public class measureInputActivity extends Activity {
 			houshiString = cursor.getString(cursor.getColumnIndex("houshi"));
 		}
 		cursor.close();
+		db.close();
 		return houshiString;
 	}
 	
@@ -112,6 +115,7 @@ public class measureInputActivity extends Activity {
 			qianshiString = cursor.getString(cursor.getColumnIndex("qianshi"));
 		}
 		cursor.close();
+		db.close();
 		return qianshiString;
 	}
 	
@@ -138,18 +142,39 @@ public class measureInputActivity extends Activity {
 
 		@Override
 		public void onClick(View arg0) {
-			DataDetailModel dataModel = new DataDetailModel();
-			dataModel.setZhuanghao(zhuanghaoEdit.getText().toString());
-			dataModel.setQianshi(qianshiEdit.getText().toString());
-			dataModel.setZhongshi(zhongshiEdit.getText().toString());
-			dataModel.setHoushi(houshiEdit.getText().toString());
+			
+			String zhuanghao = zhuanghaoEdit.getText().toString();
+			String qianshi = qianshiEdit.getText().toString();
+			String zhongshi = zhongshiEdit.getText().toString();
+			String houshi = houshiEdit.getText().toString();
+			
+			if (zhuanghao.equals("") || zhuanghao.length() == 0) {
+				zhuanghao = "0000";
+			}
+			
+			if (qianshi.equals("") || qianshi.length() == 0) {
+				qianshi = "0000";
+			}
+			
+			if (zhongshi.equals("") || zhongshi.length() == 0) {
+				zhongshi = "0000";
+			}
+			
+			if (houshi.equals("") || houshi.length() == 0) {
+				houshi = "0000";
+			}
+			
+			SQLiteDatabase db = databaseHelper.getWritableDatabase();
+			String uid = mPreferences.getString(constants.IDCODER, "");
+			
+			db.execSQL("insert into measure_data_detail (UID, zhuanghao, qianshi ,zhongshi," +
+					"houshi) values(?,?,?,?,?)", new Object[]{uid, 
+					zhuanghao, qianshi, zhongshi, houshi});
 			
 			zhuanghaoEdit.setText("");
 			qianshiEdit.setText("");
 			zhongshiEdit.setText("");
 			houshiEdit.setText("");
-			
-			dataList.add(dataModel);
 		}
 		
 	}
