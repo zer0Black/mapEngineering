@@ -54,13 +54,13 @@ public class MeasureFragment extends Fragment {
 			Bundle savedInstanceState) {
 		layoutView = inflater.inflate(R.layout.measure, null);
 		
-		manCodeOneEdit = (EditText)manCodeOneEdit.findViewById(R.id.manCode_one);
-		manCodeTwoEdit = (EditText)manCodeTwoEdit.findViewById(R.id.manCode_two);
-		manCodeThreeEdit = (EditText)manCodeThreeEdit.findViewById(R.id.manCode_three);
-		instrumentCodeEdit = (EditText)instrumentCodeEdit.findViewById(R.id.instrumentCode);
-		checkBox = (CheckBox)checkBox.findViewById(R.id.checkBox1);
+		manCodeOneEdit = (EditText)layoutView.findViewById(R.id.manCode_one);
+		manCodeTwoEdit = (EditText)layoutView.findViewById(R.id.manCode_two);
+		manCodeThreeEdit = (EditText)layoutView.findViewById(R.id.manCode_three);
+		instrumentCodeEdit = (EditText)layoutView.findViewById(R.id.instrumentCode);
+		checkBox = (CheckBox)layoutView.findViewById(R.id.checkBox1);
 		
-		startMeasureButton = (Button)startMeasureButton.findViewById(R.id.startMeasure);
+		startMeasureButton = (Button)layoutView.findViewById(R.id.startMeasure);
 		startMeasureButton.setOnClickListener(new startMeasureListener());
 		
 		return layoutView;

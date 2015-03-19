@@ -101,7 +101,6 @@ public class measureInputActivity extends Activity {
 			houshiString = cursor.getString(cursor.getColumnIndex("houshi"));
 		}
 		cursor.close();
-		db.close();
 		return houshiString;
 	}
 	
@@ -115,7 +114,6 @@ public class measureInputActivity extends Activity {
 			qianshiString = cursor.getString(cursor.getColumnIndex("qianshi"));
 		}
 		cursor.close();
-		db.close();
 		return qianshiString;
 	}
 	

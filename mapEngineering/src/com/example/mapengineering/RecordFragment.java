@@ -105,12 +105,14 @@ public class RecordFragment extends Fragment {
 		completeList.clear();
 		
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select startTime, againMeasure, measureType from measure_data", new String[]{});
+		Cursor cursor = db.rawQuery("select date, startTime, againMeasure, measureType from measure_data", new String[]{});
 		
 		while(cursor.moveToNext()){
 			DataModel dataModel = new DataModel();
-			
+			String date = cursor.getString(cursor.getColumnIndex("date"));
 			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
+			String dateTime = date + starttime;
+			
 			Boolean isAgain = null;
 			if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 0) {
 				isAgain = false;
@@ -120,7 +122,7 @@ public class RecordFragment extends Fragment {
 			
 			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
 				
-			dataModel.setStartTime(starttime);
+			dataModel.setStartTime(dateTime);
 			dataModel.setIsAgainMeasure(isAgain);
 			dataModel.setMeasureType(measureType);
 			
