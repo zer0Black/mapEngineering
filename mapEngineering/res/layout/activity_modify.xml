@@ -14,16 +14,7 @@
                 android:layout_centerInParent="true"
                 android:textColor="#ffffff"
                 android:textSize="18dp"
-                android:text="输入数据"/>
-            
-            <Button android:id="@+id/chakanshuju"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:textSize="14dp"
-                android:textColor="#ffffff"
-                android:text="查看数据"/>
-                
+                android:text="修改数据"/>           
         </RelativeLayout>
     
   	<LinearLayout
@@ -35,7 +26,7 @@
         android:layout_marginTop="30dp"
         android:orientation="horizontal" >
 
-        <EditText android:id="@+id/zhuanghao"
+        <EditText android:id="@+id/zhuanghao_modify"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:hint="请输入里程"
@@ -45,7 +36,7 @@
         />
 
         <Button
-            android:id="@+id/zhuanghao_yy"
+            android:id="@+id/zhuanghao_yy_modify"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/yuyin" />
@@ -59,7 +50,7 @@
         android:layout_marginRight="10dp"
         android:orientation="horizontal" >
 
-        <EditText android:id="@+id/qianshi"
+        <EditText android:id="@+id/qianshi_modify"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_weight="1"
@@ -69,7 +60,7 @@
         />
 
         <Button
-            android:id="@+id/qianshi_yy"
+            android:id="@+id/qianshi_yy_modify"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/yuyin" />
@@ -83,7 +74,7 @@
         android:layout_marginRight="10dp"
         android:orientation="horizontal" >
 
-        <EditText android:id="@+id/zhongshi"
+        <EditText android:id="@+id/zhongshi_modify"
         android:layout_width="wrap_content"
         android:layout_weight="1"
         android:layout_height="40dp"
@@ -93,7 +84,7 @@
         />
 
         <Button
-            android:id="@+id/zhongshi_yy"
+            android:id="@+id/zhongshi_yy_modify"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/yuyin" />
@@ -107,7 +98,7 @@
         android:layout_marginRight="10dp"
         android:orientation="horizontal" >
 
-         <EditText android:id="@+id/houshi"
+         <EditText android:id="@+id/houshi_modify"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_weight="1"
@@ -117,34 +108,17 @@
         />
 
         <Button
-            android:id="@+id/houshi_yy"
+            android:id="@+id/houshi_yy_modify"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
 
-    <Button android:id="@+id/nextPoint"
+    <Button android:id="@+id/save_modify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="完成输入"/>
+        android:text="保存"/>
     
-    
-    <LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom"
-		android:layout_weight="0.1"
-		android:gravity="bottom"
-		android:orientation="vertical" >
-		<Button android:id="@+id/finishMeasure"
-			android:layout_width="match_parent"
-			android:layout_height="50dp"
-			android:layout_marginBottom="0dp"
-			android:textColor="#ff0000"
-			android:gravity="center"
-			android:text="完成测量" />
-    
-	</LinearLayout>
     
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.example.mapengineering.model;
 
 public class DataModel {
 
+	private String ID;
 	private String Date;
 	private String startTime;
 	private String endTime;
@@ -14,6 +15,13 @@ public class DataModel {
 	private Boolean isAgainMeasure;//是不是复测
 	private Boolean flag;//测量完为true，未测量完为false
 	
+	
+	public String getID() {
+		return ID;
+	}
+	public void setID(String iD) {
+		ID = iD;
+	}
 	public String getDate() {
 		return Date;
 	}

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,13 +17,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.mapengineering.data.DatabaseHelper;
 import com.example.mapengineering.model.DataDetailModel;
+import com.example.mapengineering.util.JsonParser;
 import com.example.mapengineering.util.constants;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 public class measureInputActivity extends Activity {
 
+	// 语音听写UI
+    private RecognizerDialog iatDialog;
+    private Toast mToast;
+	
 	private EditText zhuanghaoEdit;
 	private EditText qianshiEdit;
 	private EditText zhongshiEdit;
@@ -30,6 +43,11 @@ public class measureInputActivity extends Activity {
 	private Button nextButton;
 	private Button finishMeasure;
 	private Button chakanshuju;
+	
+	private Button zhuanghaoYY;
+	private Button qianshiYY;
+	private Button zhongshiYY;
+	private Button houshiYY;
 	
 	private SharedPreferences mPreferences;
 //	private List<DataDetailModel> dataList;
@@ -66,16 +84,20 @@ public class measureInputActivity extends Activity {
 				String DateFormat = d1.format(now);
 				String dateSplit[] = DateFormat.split(" ");
 				String endTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
+				int flag = 1;
 				
 				//取出起始水准点
 				String startPoint = getStartPoint(uid);
 				//取出结束水准点
 				String endPoint = getEndPoint(uid);
 				//把结束时间，起始点，结束点插入表
-				db.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=? where ID=?",
-						new Object[]{endTime, startPoint, endPoint, uid});
+				db.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=?, flag=? where ID=?",
+						new Object[]{endTime, startPoint, endPoint, flag, uid});
 				
 				db.close();
+				
+				Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -89,6 +111,58 @@ public class measureInputActivity extends Activity {
 //				startActivity(intent);
 			}
 		});
+		
+		// 初始化听写Dialog,如果只使用有UI听写功能,无需创建SpeechRecognizer
+		iatDialog = new RecognizerDialog(this,mInitListener);
+		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);	
+				
+			zhuanghaoYY = (Button)findViewById(R.id.zhuanghao_yy);
+			zhuanghaoYY.setOnClickListener(new View.OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						zhuanghaoEdit.setText("");
+						iatDialog.setListener(recognizerDialogListenerZhuanghao);
+						iatDialog.show();
+						showTip("开始识别");
+					}
+				});	
+			
+			qianshiYY = (Button)findViewById(R.id.qianshi_yy);
+			qianshiYY.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					qianshiEdit.setText("");
+					iatDialog.setListener(recognizerDialogListenerQianshi);
+					iatDialog.show();
+					showTip("开始识别");
+				}
+			});
+			
+			zhongshiYY = (Button)findViewById(R.id.zhongshi_yy);
+			zhongshiYY.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					zhongshiEdit.setText("");
+					iatDialog.setListener(recognizerDialogListenerZhongshi);
+					iatDialog.show();
+					showTip("开始识别");
+				}
+			});
+			
+			houshiYY = (Button)findViewById(R.id.houshi_yy);
+			houshiYY.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					houshiEdit.setText("");
+					iatDialog.setListener(recognizerDialogListenerHoushi);
+					iatDialog.show();
+					showTip("开始识别");
+				}
+			});
 	}
 
 	//获取起始水准点
@@ -146,6 +220,11 @@ public class measureInputActivity extends Activity {
 			String zhongshi = zhongshiEdit.getText().toString();
 			String houshi = houshiEdit.getText().toString();
 			
+			if (zhuanghao.equals("")&&qianshi.equals("")&&zhongshi.equals("")&&houshi.equals("")) {
+				Toast.makeText(getApplicationContext(), "没有任何数据输入，请检查", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			if (zhuanghao.equals("") || zhuanghao.length() == 0) {
 				zhuanghao = "0000";
 			}
@@ -165,15 +244,87 @@ public class measureInputActivity extends Activity {
 			SQLiteDatabase db = databaseHelper.getWritableDatabase();
 			String uid = mPreferences.getString(constants.IDCODER, "");
 			
-			db.execSQL("insert into measure_data_detail (UID, zhuanghao, qianshi ,zhongshi," +
+			db.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi ,zhongshi," +
 					"houshi) values(?,?,?,?,?)", new Object[]{uid, 
 					zhuanghao, qianshi, zhongshi, houshi});
+			
+			db.close();
 			
 			zhuanghaoEdit.setText("");
 			qianshiEdit.setText("");
 			zhongshiEdit.setText("");
 			houshiEdit.setText("");
 		}
-		
 	}
+	
+	/**
+	 * 初始化监听器。
+	 */
+	private InitListener mInitListener = new InitListener() {
+
+		@Override
+		public void onInit(int code) {
+			if (code != ErrorCode.SUCCESS) {
+        		showTip("初始化失败,错误码："+code);
+        	}
+		}
+	};
+	
+	private void showTip(final String str)
+	{
+		mToast.setText(str);
+		mToast.show();
+	}
+	
+	private RecognizerDialogListener recognizerDialogListenerZhuanghao=new RecognizerDialogListener(){
+		
+		public void onResult(RecognizerResult results, boolean isLast) {
+			String text = JsonParser.parseIatResult(results.getResultString());
+			zhuanghaoEdit.append(text);
+			zhuanghaoEdit.setSelection(zhuanghaoEdit.length());
+		}
+
+		public void onError(SpeechError error) {
+			showTip(error.getPlainDescription(true));
+		}
+	};
+	
+	private RecognizerDialogListener recognizerDialogListenerQianshi=new RecognizerDialogListener(){
+		
+		public void onResult(RecognizerResult results, boolean isLast) {
+			String text = JsonParser.parseIatResult(results.getResultString());
+			qianshiEdit.append(text);
+			qianshiEdit.setSelection(qianshiEdit.length());
+		}
+
+		public void onError(SpeechError error) {
+			showTip(error.getPlainDescription(true));
+		}
+	};
+	
+	private RecognizerDialogListener recognizerDialogListenerZhongshi=new RecognizerDialogListener(){
+		
+		public void onResult(RecognizerResult results, boolean isLast) {
+			String text = JsonParser.parseIatResult(results.getResultString());
+			zhongshiEdit.append(text);
+			zhongshiEdit.setSelection(zhongshiEdit.length());
+		}
+
+		public void onError(SpeechError error) {
+			showTip(error.getPlainDescription(true));
+		}
+	};
+	
+	private RecognizerDialogListener recognizerDialogListenerHoushi=new RecognizerDialogListener(){
+		
+		public void onResult(RecognizerResult results, boolean isLast) {
+			String text = JsonParser.parseIatResult(results.getResultString());
+			houshiEdit.append(text);
+			houshiEdit.setSelection(houshiEdit.length());
+		}
+
+		public void onError(SpeechError error) {
+			showTip(error.getPlainDescription(true));
+		}
+	};
 }

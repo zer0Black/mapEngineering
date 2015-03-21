@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class CompleteDetaildataViewAdapter extends BaseAdapter {
+public class DetaildataViewAdapter extends BaseAdapter {
 
 	private LayoutInflater mInflater;
 	private List<DataDetailModel> dataList;
 	
-	public CompleteDetaildataViewAdapter(Context context, List<DataDetailModel> data){
+	public DetaildataViewAdapter(Context context, List<DataDetailModel> data){
 		this.mInflater = LayoutInflater.from(context);
 		dataList = data;
 	}
@@ -60,6 +60,17 @@ public class CompleteDetaildataViewAdapter extends BaseAdapter {
 	        }else {    
 	            holder = (ViewHolder)convertView.getTag();
 	        }
+			 
+			 String zhuanghao = dataList.get(position).getZhuanghao();
+			 String zhongshi = dataList.get(position).getZhongshi();
+			 String qianshi = dataList.get(position).getQianshi();
+			 String houshi = dataList.get(position).getHoushi();
+			 
+			 holder.cedian.setText(zhuanghao);
+			 holder.qianshi.setText(qianshi);
+			 holder.zhongshi.setText(zhongshi);
+			 holder.houshi.setText(houshi);
+			 
 			return convertView;
 		}
 		

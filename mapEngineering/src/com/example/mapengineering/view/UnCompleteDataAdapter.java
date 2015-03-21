@@ -14,12 +14,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class CompleteDataAdapter extends BaseAdapter{
+public class UnCompleteDataAdapter extends BaseAdapter{
 
 	private LayoutInflater mInflater;
 	private List<DataModel> dataList;
 	
-	public CompleteDataAdapter(Context context, List<DataModel> data){
+	public UnCompleteDataAdapter(Context context, List<DataModel> data){
 		this.mInflater = LayoutInflater.from(context);
 		dataList = data;
 	}

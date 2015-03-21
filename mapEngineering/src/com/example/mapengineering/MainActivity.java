@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
+
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -45,6 +48,8 @@ public class MainActivity extends FragmentActivity {
 		
 		setContentView(R.layout.activity_main);
 		this.initTabhost();
+		
+		SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID +"=54ff0bbe");
 		
 //		ExpressApplication.getInstance().addActivity(this);
 	}

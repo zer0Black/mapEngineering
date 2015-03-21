@@ -6,8 +6,10 @@ import java.util.List;
 import com.example.mapengineering.data.DatabaseHelper;
 import com.example.mapengineering.model.DataModel;
 import com.example.mapengineering.view.CompleteDataAdapter;
+import com.example.mapengineering.view.UnCompleteDataAdapter;
 import com.example.mapengineering.view.ViewPagerAdapter;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -25,6 +27,8 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -48,8 +52,11 @@ public class RecordFragment extends Fragment {
 	
 	CompleteDataAdapter completeDataAdapter;
 	List<DataModel> completeList = new ArrayList<DataModel>();
+	UnCompleteDataAdapter unCompleteDataAdapter;
+	List<DataModel> unCompleteList = new ArrayList<DataModel>();
 	
 	ListView completeListView;
+	ListView unCompleteListView;
 	
 	DatabaseHelper databaseHelper;
 
@@ -75,6 +82,14 @@ public class RecordFragment extends Fragment {
 		return layoutView;
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		this.initCompleteData();
+		this.initUnCompleteData();
+	}
+	
 	/**
 	 * 初始化滑动页内容
 	 */
@@ -92,23 +107,33 @@ public class RecordFragment extends Fragment {
 		viewPager.setCurrentItem(0);
 		
 		this.initCompletePage();
+		this.initUnCompletePage();
 	}
 	
 	private void initCompletePage() {
 		completeDataAdapter = new CompleteDataAdapter(getActivity(), completeList);
 		completeListView = (ListView)view.findViewById(R.id.complete_dataList);
 		completeListView.setAdapter(completeDataAdapter);
-		this.initCompleteData();
+		completeListView.setOnItemClickListener(new completeItemClick());
+		
+	}
+	
+	private void initUnCompletePage() {
+		unCompleteDataAdapter = new UnCompleteDataAdapter(getActivity(), unCompleteList);
+		unCompleteListView = (ListView)view2.findViewById(R.id.uncomplete_dataList);
+		unCompleteListView.setAdapter(unCompleteDataAdapter);
+		unCompleteListView.setOnItemClickListener(new UnCompleteItemClick());
 	}
 	
 	private void initCompleteData() {
 		completeList.clear();
 		
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select date, startTime, againMeasure, measureType from measure_data", new String[]{});
+		Cursor cursor = db.rawQuery("select ID, date, startTime, againMeasure, measureType from measure_data where flag = 1", new String[]{});
 		
 		while(cursor.moveToNext()){
 			DataModel dataModel = new DataModel();
+			String ID = cursor.getString(cursor.getColumnIndex("ID"));
 			String date = cursor.getString(cursor.getColumnIndex("date"));
 			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
 			String dateTime = date + starttime;
@@ -122,6 +147,7 @@ public class RecordFragment extends Fragment {
 			
 			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
 				
+			dataModel.setID(ID);
 			dataModel.setStartTime(dateTime);
 			dataModel.setIsAgainMeasure(isAgain);
 			dataModel.setMeasureType(measureType);
@@ -132,26 +158,67 @@ public class RecordFragment extends Fragment {
 		completeDataAdapter.notifyDataSetChanged();
 	}
 	
-//	private void initUnCompletePage() {
-//		currOrderAdapter = new CurrOrderAdapter(getActivity(), curOrderList);
-//		
-//		progressBar = (ProgressBar) view.findViewById(R.id.progressbar_take);
-//		imgBtnLaunchTake = (ImageView) view.findViewById(R.id.imgbtnCallTake);
-//		
-//		lsvCurrTake = (ListView) view.findViewById(R.id.lsvCurTake);
-//		ll_index = (LinearLayout) view.findViewById(R.id.il_index);
-//		
-//		if (curOrderList.size()>0) {
-//			ll_index.setVisibility(ListView.GONE);
-//			lsvCurrTake.setVisibility(ListView.VISIBLE);
-//		}
-//		// lsvCurrTake.setSelector(R.drawable.curtakebgshape);
-//		lsvCurrTake.setAdapter(currOrderAdapter);
-//		this.setControlEvents();
-//		this.initTakeCurrData();
-//	}
+	private void initUnCompleteData() {
+		unCompleteList.clear();
+		
+		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select ID, date, startTime, againMeasure, measureType from measure_data where flag = 0", new String[]{});
+		
+		while(cursor.moveToNext()){
+			DataModel dataModel = new DataModel();
+			String ID = cursor.getString(cursor.getColumnIndex("ID"));
+			String date = cursor.getString(cursor.getColumnIndex("date"));
+			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
+			String dateTime = date + starttime;
+			
+			Boolean isAgain = null;
+			if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 0) {
+				isAgain = false;
+			}else if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 1) {
+				isAgain = true;
+			}
+			
+			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
+				
+			dataModel.setID(ID);
+			dataModel.setStartTime(dateTime);
+			dataModel.setIsAgainMeasure(isAgain);
+			dataModel.setMeasureType(measureType);
+			
+			unCompleteList.add(dataModel);
+		}
+		cursor.close();
+		unCompleteDataAdapter.notifyDataSetChanged();
+	}
 
 
+	class completeItemClick implements OnItemClickListener{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// TODO Auto-generated method stub
+			String ID = completeList.get(position).getID();
+			Intent intent = new Intent(getActivity(), CompleteDetailListAcitivity.class);
+			intent.putExtra("ID", ID);
+			startActivity(intent);
+		}
+	}
+	
+	class UnCompleteItemClick implements OnItemClickListener{
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			// TODO Auto-generated method stub
+			String ID = unCompleteList.get(position).getID();
+			Intent intent = new Intent(getActivity(), UnCompleteDetailListAcitivity.class);
+			intent.putExtra("ID", ID);
+			startActivity(intent);
+		}
+		
+	}
+	
 	/**
 	 * 初始化页卡指示图片
 	 */

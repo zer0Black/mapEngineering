@@ -4,12 +4,20 @@ import java.io.Serializable;
 
 public class DataDetailModel implements Serializable{
 
+	private String ID;
 	private String zhuanghao;
 	private String qianshi;
 	private String zhongshi;
 	private String houshi;
 	
+	
 
+	public String getID() {
+		return ID;
+	}
+	public void setID(String iD) {
+		ID = iD;
+	}
 	public String getZhuanghao() {
 		return zhuanghao;
 	}
