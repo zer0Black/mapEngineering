@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mapengineering.data.DatabaseHelper;
@@ -30,27 +31,31 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 
-public class measureInputActivity extends Activity {
-
+public class measureInputActivity extends Activity {	
+	
 	// 语音听写UI
     private RecognizerDialog iatDialog;
     private Toast mToast;
 	
-	private EditText zhuanghaoEdit;
-	private EditText qianshiEdit;
-	private EditText zhongshiEdit;
-	private EditText houshiEdit;
-	private Button nextButton;
-	private Button finishMeasure;
-	private Button chakanshuju;
+//	private EditText zhuanghaoEdit;
+//	private EditText qianshiEdit;
+//	private EditText zhongshiEdit;
+//	private EditText houshiEdit;
+    
+    private TextView ceZhanInfo;
+    private TextView gaoChaTextView;//高差的展示
+    
+    private EditText ceDianInput;//测站点修改框
+    private EditText inputOne;//输入框1
+    private EditText inputTwo;//输入框2
+    
+	private Button finishInput;
+	private Button chaKanShuJu;
 	
-	private Button zhuanghaoYY;
-	private Button qianshiYY;
-	private Button zhongshiYY;
-	private Button houshiYY;
+	private Button inputOneYY;
+	private Button inputTwoYY;
 	
 	private SharedPreferences mPreferences;
-//	private List<DataDetailModel> dataList;
 	DatabaseHelper databaseHelper;
 	
 	@Override
@@ -60,109 +65,116 @@ public class measureInputActivity extends Activity {
 		mPreferences=getSharedPreferences(constants.UID, MODE_PRIVATE);
 		
 		databaseHelper = new DatabaseHelper(getApplicationContext());
-//		dataList = new ArrayList<DataDetailModel>();
 		
-		zhuanghaoEdit = (EditText)findViewById(R.id.zhuanghao);
-		qianshiEdit = (EditText)findViewById(R.id.qianshi);
-		zhongshiEdit = (EditText)findViewById(R.id.zhongshi);
-		houshiEdit = (EditText)findViewById(R.id.houshi);
+		ceZhanInfo = (TextView)findViewById(R.id.cezhandian);
+		gaoChaTextView = (TextView)findViewById(R.id.gaocha);
 		
-		nextButton = (Button)findViewById(R.id.nextPoint);
-		nextButton.setOnClickListener(new nextButton());
+		ceDianInput = (EditText)findViewById(R.id.cezhandian_edit);
+		inputOne = (EditText)findViewById(R.id.inputOne);
+		inputTwo = (EditText)findViewById(R.id.inputTwo);
 		
-		finishMeasure = (Button)findViewById(R.id.finishMeasure);
-		finishMeasure.setOnClickListener(new OnClickListener() {
-			
+		finishInput = (Button)findViewById(R.id.finishInput);
+		finishInput.setOnClickListener(new OnClickListener() {
+	
 			@Override
-			public void onClick(View arg0) {
-				SQLiteDatabase db = databaseHelper.getWritableDatabase();
-				String uid = mPreferences.getString(constants.IDCODER, "");
+			public void onClick(View v) {
 				
-				//获取日期和当前时间
-				Date now = new Date(); 
-				DateFormat d1 = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
-				String DateFormat = d1.format(now);
-				String dateSplit[] = DateFormat.split(" ");
-				String endTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
-				int flag = 1;
-				
-				//取出起始水准点
-				String startPoint = getStartPoint(uid);
-				//取出结束水准点
-				String endPoint = getEndPoint(uid);
-				//把结束时间，起始点，结束点插入表
-				db.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=?, flag=? where ID=?",
-						new Object[]{endTime, startPoint, endPoint, flag, uid});
-				
-				db.close();
-				
-				Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
-				startActivity(intent);
 			}
 		});
 		
-		chakanshuju = (Button)findViewById(R.id.chakanshuju);
-		chakanshuju.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-//				Intent intent = new Intent(measureInputActivity.this, ListBaseAcitivity.class);
-//				intent.putExtra("data", (Serializable)dataList); 
+//		finishMeasure = (Button)findViewById(R.id.finishMeasure);
+//		finishMeasure.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View arg0) {
+//				SQLiteDatabase db = databaseHelper.getWritableDatabase();
+//				String uid = mPreferences.getString(constants.IDCODER, "");
+//				
+//				//获取日期和当前时间
+//				Date now = new Date(); 
+//				DateFormat d1 = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
+//				String DateFormat = d1.format(now);
+//				String dateSplit[] = DateFormat.split(" ");
+//				String endTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
+//				int flag = 1;
+//				
+//				//取出起始水准点
+//				String startPoint = getStartPoint(uid);
+//				//取出结束水准点
+//				String endPoint = getEndPoint(uid);
+//				//把结束时间，起始点，结束点插入表
+//				db.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=?, flag=? where ID=?",
+//						new Object[]{endTime, startPoint, endPoint, flag, uid});
+//				
+//				db.close();
+//				
+//				Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
 //				startActivity(intent);
-			}
-		});
+//			}
+//		});
+//		
+//		chakanshuju = (Button)findViewById(R.id.chakanshuju);
+//		chakanshuju.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View arg0) {
+////				Intent intent = new Intent(measureInputActivity.this, ListBaseAcitivity.class);
+////				intent.putExtra("data", (Serializable)dataList); 
+////				startActivity(intent);
+//			}
+//		});
 		
 		// 初始化听写Dialog,如果只使用有UI听写功能,无需创建SpeechRecognizer
 		iatDialog = new RecognizerDialog(this,mInitListener);
 		mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);	
 				
-			zhuanghaoYY = (Button)findViewById(R.id.zhuanghao_yy);
-			zhuanghaoYY.setOnClickListener(new View.OnClickListener() {
+		inputOneYY = (Button)findViewById(R.id.inputOne_yy);
+		inputOneYY.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
-						zhuanghaoEdit.setText("");
-						iatDialog.setListener(recognizerDialogListenerZhuanghao);
+						inputOneYY.setText("");
+						iatDialog.setListener(recognizerDialogListenerInputOne);
 						iatDialog.show();
 						showTip("开始识别");
 					}
 				});	
 			
-			qianshiYY = (Button)findViewById(R.id.qianshi_yy);
-			qianshiYY.setOnClickListener(new View.OnClickListener() {
+		inputTwoYY = (Button)findViewById(R.id.inputTwo_yy);
+		inputTwoYY.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					qianshiEdit.setText("");
-					iatDialog.setListener(recognizerDialogListenerQianshi);
+					inputTwo.setText("");
+					iatDialog.setListener(recognizerDialogListenerInputTwo);
 					iatDialog.show();
 					showTip("开始识别");
 				}
 			});
 			
-			zhongshiYY = (Button)findViewById(R.id.zhongshi_yy);
-			zhongshiYY.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					zhongshiEdit.setText("");
-					iatDialog.setListener(recognizerDialogListenerZhongshi);
-					iatDialog.show();
-					showTip("开始识别");
-				}
-			});
-			
-			houshiYY = (Button)findViewById(R.id.houshi_yy);
-			houshiYY.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					houshiEdit.setText("");
-					iatDialog.setListener(recognizerDialogListenerHoushi);
-					iatDialog.show();
-					showTip("开始识别");
-				}
-			});
+//			zhongshiYY = (Button)findViewById(R.id.zhongshi_yy);
+//			zhongshiYY.setOnClickListener(new View.OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//					zhongshiEdit.setText("");
+//					iatDialog.setListener(recognizerDialogListenerZhongshi);
+//					iatDialog.show();
+//					showTip("开始识别");
+//				}
+//			});
+//			
+//			houshiYY = (Button)findViewById(R.id.houshi_yy);
+//			houshiYY.setOnClickListener(new View.OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//					houshiEdit.setText("");
+//					iatDialog.setListener(recognizerDialogListenerHoushi);
+//					iatDialog.show();
+//					showTip("开始识别");
+//				}
+//			});
 	}
 
 	//获取起始水准点
@@ -210,52 +222,52 @@ public class measureInputActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	class nextButton implements OnClickListener{
-
-		@Override
-		public void onClick(View arg0) {
-			
-			String zhuanghao = zhuanghaoEdit.getText().toString();
-			String qianshi = qianshiEdit.getText().toString();
-			String zhongshi = zhongshiEdit.getText().toString();
-			String houshi = houshiEdit.getText().toString();
-			
-			if (zhuanghao.equals("")&&qianshi.equals("")&&zhongshi.equals("")&&houshi.equals("")) {
-				Toast.makeText(getApplicationContext(), "没有任何数据输入，请检查", Toast.LENGTH_SHORT).show();
-				return;
-			}
-			
-			if (zhuanghao.equals("") || zhuanghao.length() == 0) {
-				zhuanghao = "0000";
-			}
-			
-			if (qianshi.equals("") || qianshi.length() == 0) {
-				qianshi = "0000";
-			}
-			
-			if (zhongshi.equals("") || zhongshi.length() == 0) {
-				zhongshi = "0000";
-			}
-			
-			if (houshi.equals("") || houshi.length() == 0) {
-				houshi = "0000";
-			}
-			
-			SQLiteDatabase db = databaseHelper.getWritableDatabase();
-			String uid = mPreferences.getString(constants.IDCODER, "");
-			
-			db.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi ,zhongshi," +
-					"houshi) values(?,?,?,?,?)", new Object[]{uid, 
-					zhuanghao, qianshi, zhongshi, houshi});
-			
-			db.close();
-			
-			zhuanghaoEdit.setText("");
-			qianshiEdit.setText("");
-			zhongshiEdit.setText("");
-			houshiEdit.setText("");
-		}
-	}
+//	class nextButton implements OnClickListener{
+//
+//		@Override
+//		public void onClick(View arg0) {
+//			
+//			String zhuanghao = zhuanghaoEdit.getText().toString();
+//			String qianshi = qianshiEdit.getText().toString();
+//			String zhongshi = zhongshiEdit.getText().toString();
+//			String houshi = houshiEdit.getText().toString();
+//			
+//			if (zhuanghao.equals("")&&qianshi.equals("")&&zhongshi.equals("")&&houshi.equals("")) {
+//				Toast.makeText(getApplicationContext(), "没有任何数据输入，请检查", Toast.LENGTH_SHORT).show();
+//				return;
+//			}
+//			
+//			if (zhuanghao.equals("") || zhuanghao.length() == 0) {
+//				zhuanghao = "0000";
+//			}
+//			
+//			if (qianshi.equals("") || qianshi.length() == 0) {
+//				qianshi = "0000";
+//			}
+//			
+//			if (zhongshi.equals("") || zhongshi.length() == 0) {
+//				zhongshi = "0000";
+//			}
+//			
+//			if (houshi.equals("") || houshi.length() == 0) {
+//				houshi = "0000";
+//			}
+//			
+//			SQLiteDatabase db = databaseHelper.getWritableDatabase();
+//			String uid = mPreferences.getString(constants.IDCODER, "");
+//			
+//			db.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi ,zhongshi," +
+//					"houshi) values(?,?,?,?,?)", new Object[]{uid, 
+//					zhuanghao, qianshi, zhongshi, houshi});
+//			
+//			db.close();
+//			
+//			zhuanghaoEdit.setText("");
+//			qianshiEdit.setText("");
+//			zhongshiEdit.setText("");
+//			houshiEdit.setText("");
+//		}
+//	}
 	
 	/**
 	 * 初始化监听器。
@@ -276,12 +288,12 @@ public class measureInputActivity extends Activity {
 		mToast.show();
 	}
 	
-	private RecognizerDialogListener recognizerDialogListenerZhuanghao=new RecognizerDialogListener(){
+	private RecognizerDialogListener recognizerDialogListenerInputOne=new RecognizerDialogListener(){
 		
 		public void onResult(RecognizerResult results, boolean isLast) {
 			String text = JsonParser.parseIatResult(results.getResultString());
-			zhuanghaoEdit.append(text);
-			zhuanghaoEdit.setSelection(zhuanghaoEdit.length());
+			inputOne.append(text);
+			inputOne.setSelection(inputOne.length());
 		}
 
 		public void onError(SpeechError error) {
@@ -289,12 +301,12 @@ public class measureInputActivity extends Activity {
 		}
 	};
 	
-	private RecognizerDialogListener recognizerDialogListenerQianshi=new RecognizerDialogListener(){
+	private RecognizerDialogListener recognizerDialogListenerInputTwo=new RecognizerDialogListener(){
 		
 		public void onResult(RecognizerResult results, boolean isLast) {
 			String text = JsonParser.parseIatResult(results.getResultString());
-			qianshiEdit.append(text);
-			qianshiEdit.setSelection(qianshiEdit.length());
+			inputTwo.append(text);
+			inputTwo.setSelection(inputTwo.length());
 		}
 
 		public void onError(SpeechError error) {
@@ -302,29 +314,29 @@ public class measureInputActivity extends Activity {
 		}
 	};
 	
-	private RecognizerDialogListener recognizerDialogListenerZhongshi=new RecognizerDialogListener(){
-		
-		public void onResult(RecognizerResult results, boolean isLast) {
-			String text = JsonParser.parseIatResult(results.getResultString());
-			zhongshiEdit.append(text);
-			zhongshiEdit.setSelection(zhongshiEdit.length());
-		}
-
-		public void onError(SpeechError error) {
-			showTip(error.getPlainDescription(true));
-		}
-	};
-	
-	private RecognizerDialogListener recognizerDialogListenerHoushi=new RecognizerDialogListener(){
-		
-		public void onResult(RecognizerResult results, boolean isLast) {
-			String text = JsonParser.parseIatResult(results.getResultString());
-			houshiEdit.append(text);
-			houshiEdit.setSelection(houshiEdit.length());
-		}
-
-		public void onError(SpeechError error) {
-			showTip(error.getPlainDescription(true));
-		}
-	};
+//	private RecognizerDialogListener recognizerDialogListenerZhongshi=new RecognizerDialogListener(){
+//		
+//		public void onResult(RecognizerResult results, boolean isLast) {
+//			String text = JsonParser.parseIatResult(results.getResultString());
+//			zhongshiEdit.append(text);
+//			zhongshiEdit.setSelection(zhongshiEdit.length());
+//		}
+//
+//		public void onError(SpeechError error) {
+//			showTip(error.getPlainDescription(true));
+//		}
+//	};
+//	
+//	private RecognizerDialogListener recognizerDialogListenerHoushi=new RecognizerDialogListener(){
+//		
+//		public void onResult(RecognizerResult results, boolean isLast) {
+//			String text = JsonParser.parseIatResult(results.getResultString());
+//			houshiEdit.append(text);
+//			houshiEdit.setSelection(houshiEdit.length());
+//		}
+//
+//		public void onError(SpeechError error) {
+//			showTip(error.getPlainDescription(true));
+//		}
+//	};
 }

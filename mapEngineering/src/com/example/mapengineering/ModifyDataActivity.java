@@ -1,7 +1,6 @@
 package com.example.mapengineering;
 
 import com.example.mapengineering.data.DatabaseHelper;
-import com.example.mapengineering.measureInputActivity.nextButton;
 import com.example.mapengineering.model.DataModel;
 import com.example.mapengineering.util.JsonParser;
 import com.iflytek.cloud.ErrorCode;

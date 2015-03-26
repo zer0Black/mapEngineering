@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="gray">#ccc</drawable>
+    <drawable name="pinkred">#e4393c</drawable>
+    <drawable name="lightgray">#f4f4f4</drawable>
+    <drawable name="white">#ffffff</drawable>
+    <drawable name="tabBlue">#006cff</drawable>
+    <color name="finder_mask">#45403a</color>
+    <color name="normal">#575757</color>
+    <color name="darktitle">#000000</color>
+    <color name="borderColor">#a5a5a5</color>
+    <color name="selectedColor">#d7dfe9</color>
+    <color name="pinkred">#ff7200</color>
+    <color name="lakeBlue1">#006cff</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#ccc</color>
+</resources>
