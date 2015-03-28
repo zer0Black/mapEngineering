@@ -97,7 +97,7 @@
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
-    <LinearLayout
+    <LinearLayout android:id="@+id/inputTwoll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -122,63 +122,6 @@
             android:layout_height="50dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
-    
-    <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal" >
-
-        <EditText android:id="@+id/zhongshi"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_height="40dp"
-        android:hint="请输入中式数据"
-        android:inputType="numberDecimal"
-        android:background="@drawable/et2"
-        />
-
-        <Button
-            android:id="@+id/zhongshi_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/yuyin" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal" >
-
-         <EditText android:id="@+id/houshi"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:hint="请输入后视数据"
-        android:inputType="numberDecimal"
-        android:background="@drawable/et2"
-        />
-
-        <Button
-            android:id="@+id/houshi_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/yuyin" />
-    </LinearLayout>
- -->
-   <!--  <Button android:id="@+id/nextPoint"
-        android:layout_width="280dp"
-        android:layout_height="60dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="center_horizontal"
-        te
-        android:text="完成输入"/>
-     -->
      
     <LinearLayout
         android:layout_width="match_parent"
@@ -210,7 +153,57 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
+		android:gravity="bottom"
+		android:orientation="horizontal" >
+        
+		<Button android:id="@+id/setTempPoint"
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"
+			android:layout_marginBottom="0dp"
+			android:background="@color/lakeBlue1"
+			android:textColor="#ffffff"
+			android:gravity="center"
+			android:layout_weight="1"
+			android:text="设置临时点" />
 		
+		<View android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray"/>
+		
+		<Button android:id="@+id/addNewPoint"
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"
+			android:layout_marginBottom="0dp"
+			android:background="@color/lakeBlue1"
+			android:textColor="#ffffff"
+			android:gravity="center"
+			android:layout_weight="1"
+			android:text="添加新里程" />
+		
+		<View android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray"/>
+		
+		<Button android:id="@+id/chakanshuju"
+			android:layout_width="wrap_content"
+			android:layout_height="50dp"
+			android:layout_marginBottom="0dp"
+			android:background="@color/lakeBlue1"
+			android:textColor="#ffffff"
+			android:gravity="center"
+			android:layout_weight="1"
+			android:text="查看数据" />
+    
+	</LinearLayout>
+    
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"/>
+    
+    <LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
 		android:gravity="bottom"
 		android:orientation="vertical" >
         
@@ -218,9 +211,10 @@
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
 			android:layout_marginBottom="0dp"
-			android:background="@color/pinkred"
+			android:background="@color/lakeBlue1"
 			android:textColor="#ffffff"
 			android:gravity="center"
+			android:textStyle="bold"
 			android:text="完成输入" />
     
 	</LinearLayout>

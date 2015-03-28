@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.example.mapengineering.data.DatabaseHelper;
@@ -42,7 +44,6 @@ public class MeasureFragment extends Fragment {
 	private EditText manCodeTwoEdit;
 	private EditText manCodeThreeEdit;
 	private EditText instrumentCodeEdit;
-	private CheckBox checkBox;
 	private Button startMeasureButton;
 	
 	private Button manCodeOneYYButton;
@@ -53,6 +54,8 @@ public class MeasureFragment extends Fragment {
 	private View layoutView;
 	FragmentManager fManager;
 	private SharedPreferences mPreferences;
+	
+	private String oneOrTwoMeasure ="";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,17 +74,31 @@ public class MeasureFragment extends Fragment {
 			Bundle savedInstanceState) {
 		layoutView = inflater.inflate(R.layout.measure, null);
 		
+		RadioGroup group = (RadioGroup)layoutView.findViewById(R.id.radioGroup);
+		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// TODO Auto-generated method stub
+				int radioButtonId = group.getCheckedRadioButtonId();
+				//根据ID获取RadioButton的实例
+				RadioButton rb = (RadioButton)layoutView.findViewById(radioButtonId);
+				//更新文本内容，以符合选中项
+				oneOrTwoMeasure = rb.getText().toString();
+			}
+			
+		});
+		
 		manCodeOneEdit = (EditText)layoutView.findViewById(R.id.manCode_one);
 		manCodeTwoEdit = (EditText)layoutView.findViewById(R.id.manCode_two);
 		manCodeThreeEdit = (EditText)layoutView.findViewById(R.id.manCode_three);
 		instrumentCodeEdit = (EditText)layoutView.findViewById(R.id.instrumentCode);
-		checkBox = (CheckBox)layoutView.findViewById(R.id.checkBox1);
 		
 		startMeasureButton = (Button)layoutView.findViewById(R.id.startMeasure);
 		startMeasureButton.setOnClickListener(new startMeasureListener());
 		
 		manCodeOneYYButton = (Button)layoutView.findViewById(R.id.manCode_One_yy);
-		manCodeOneYYButton.setOnClickListener(new View.OnClickListener() {
+		manCodeOneYYButton.setOnClickListener(new View.OnClickListener() {		
 			
 			@Override
 			public void onClick(View v) {
@@ -221,14 +238,9 @@ public class MeasureFragment extends Fragment {
 		String manCodeTwo = manCodeTwoEdit.getText().toString();
 		String manCodeThree = manCodeThreeEdit.getText().toString();
 		String instrumentCode = instrumentCodeEdit.getText().toString();
-		Boolean isAgainMeasure = checkBox.isChecked();
-		int againMeasure;
-		if (isAgainMeasure) {
-			againMeasure = 1;
-		}else{
-			againMeasure = 0;
-		}
+		String oneOrTwo = oneOrTwoMeasure;
 		
+	
 		if (manCodeOne == null || manCodeOne.length() == 0
 				|| manCodeTwo == null || manCodeTwo.length() == 0
 				|| manCodeThree == null || manCodeThree.length() == 0) {
@@ -238,6 +250,11 @@ public class MeasureFragment extends Fragment {
 		
 		if (instrumentCode == null || instrumentCode.length() == 0) {
 			Toast.makeText(getActivity(), "请输入仪器代码", Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		if (oneOrTwo == "" || oneOrTwo == null) {
+			Toast.makeText(getActivity(), "请确认是一平还是二平", Toast.LENGTH_LONG).show();
 			return;
 		}
 		
@@ -259,22 +276,22 @@ public class MeasureFragment extends Fragment {
 		Editor editor=mPreferences.edit();
 		editor.putString(constants.IDCODER, uidString).commit();
 		//存入数据库
-		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, againMeasure, flag);
+		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, oneOrTwo, flag);
 	
-		Intent intent = new Intent(getActivity(), measureInputActivity.class);
+		Intent intent = new Intent(getActivity(), ImportFileActivity.class);
 		startActivity(intent);
 	}
 	
 	private void save(String uid, String date, String startTime, String mancodeOne, 
 			String mancodeTwo, String mancodeThree, int measureType,
-			int againMeasure, int flag){
+			String oneOrTwoMeasure, int flag){
 		DatabaseHelper databaseHelper = new DatabaseHelper(this.getActivity());
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		db.execSQL("insert into measure_data(ID, date, startTime ,mancodeOne," +
-				"mancodeTwo, mancodeThree, measureType, againMeasure, flag)" +
+				"mancodeTwo, mancodeThree, measureType, oneOrTwoMeasure, flag)" +
 				"values(?,?,?,?,?,?,?,?,?)", new Object[]{uid,
 			date, startTime, mancodeOne, mancodeTwo, mancodeThree, 
-			measureType, againMeasure, flag});
+			measureType, oneOrTwoMeasure, flag});
 		
 		db.close();
 	}

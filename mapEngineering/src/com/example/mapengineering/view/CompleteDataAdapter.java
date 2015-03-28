@@ -61,12 +61,7 @@ public class CompleteDataAdapter extends BaseAdapter{
          }
 		 
 		 String startTime = dataList.get(position).getStartTime();
-		 String measureAgain = "";
-		 if (dataList.get(position).getIsAgainMeasure()) {
-			 measureAgain="返测";
-		}else{
-			 measureAgain=" 往测";
-		}
+		 String measureAgain = dataList.get(position).getOneOrTwoMeasure();
 		 
 		 String measureStyle = "";
 		 if (dataList.get(position).getMeasureType() == 6) {

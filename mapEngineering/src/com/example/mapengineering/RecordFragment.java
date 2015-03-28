@@ -129,7 +129,7 @@ public class RecordFragment extends Fragment {
 		completeList.clear();
 		
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select ID, date, startTime, againMeasure, measureType from measure_data where flag = 1", new String[]{});
+		Cursor cursor = db.rawQuery("select ID, date, startTime, oneOrTwoMeasure, measureType from measure_data where flag = 1", new String[]{});
 		
 		while(cursor.moveToNext()){
 			DataModel dataModel = new DataModel();
@@ -137,19 +137,13 @@ public class RecordFragment extends Fragment {
 			String date = cursor.getString(cursor.getColumnIndex("date"));
 			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
 			String dateTime = date + starttime;
-			
-			Boolean isAgain = null;
-			if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 0) {
-				isAgain = false;
-			}else if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 1) {
-				isAgain = true;
-			}
+			String oneOrTwoMeasure = cursor.getString(cursor.getColumnIndex("oneOrTwoMeasure"));
 			
 			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
 				
 			dataModel.setID(ID);
 			dataModel.setStartTime(dateTime);
-			dataModel.setIsAgainMeasure(isAgain);
+			dataModel.setOneOrTwoMeasure(oneOrTwoMeasure);
 			dataModel.setMeasureType(measureType);
 			
 			completeList.add(dataModel);
@@ -162,7 +156,7 @@ public class RecordFragment extends Fragment {
 		unCompleteList.clear();
 		
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select ID, date, startTime, againMeasure, measureType from measure_data where flag = 0", new String[]{});
+		Cursor cursor = db.rawQuery("select ID, date, startTime, oneOrTwoMeasure, measureType from measure_data where flag = 0", new String[]{});
 		
 		while(cursor.moveToNext()){
 			DataModel dataModel = new DataModel();
@@ -170,19 +164,13 @@ public class RecordFragment extends Fragment {
 			String date = cursor.getString(cursor.getColumnIndex("date"));
 			String starttime = cursor.getString(cursor.getColumnIndex("startTime"));
 			String dateTime = date + starttime;
-			
-			Boolean isAgain = null;
-			if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 0) {
-				isAgain = false;
-			}else if (cursor.getInt(cursor.getColumnIndex("againMeasure")) == 1) {
-				isAgain = true;
-			}
+			String oneOrTwoMeasure = cursor.getString(cursor.getColumnIndex("oneOrTwoMeasure"));
 			
 			int measureType = cursor.getInt(cursor.getColumnIndex("measureType"));
 				
 			dataModel.setID(ID);
 			dataModel.setStartTime(dateTime);
-			dataModel.setIsAgainMeasure(isAgain);
+			dataModel.setOneOrTwoMeasure(oneOrTwoMeasure);
 			dataModel.setMeasureType(measureType);
 			
 			unCompleteList.add(dataModel);
