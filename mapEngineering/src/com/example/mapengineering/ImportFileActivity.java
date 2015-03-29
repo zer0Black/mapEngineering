@@ -1,4 +1,3 @@
-// filename: OpenFileDemo.java
 package com.example.mapengineering;
 
 import java.util.HashMap;
@@ -62,7 +61,8 @@ public class ImportFileActivity extends Activity {
 				@Override
 				public void callback(Bundle bundle) {
 					String filepath = bundle.getString("path");
-					filePath.setText(filepath); 
+					String path[] = filepath.split("/");
+					filePath.setText("选择的文件名是\n" + path[path.length - 1]); 
 				}
 			}, 
 			".txt;",

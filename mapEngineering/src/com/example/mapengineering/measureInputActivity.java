@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -63,6 +64,7 @@ public class measureInputActivity extends Activity {
 	
 	private int count;//计数，当前的桩号计数
 	private int countInput;//计数，输入次数
+	private int interval;//测量的区间
 	private List<String> zhuanghaoList;//桩号列表
 	
 	private String uid = "";
@@ -78,7 +80,25 @@ public class measureInputActivity extends Activity {
 		dbRead = databaseHelper.getReadableDatabase();
 		
 		count = 0;//初始化为0
-		countInput = 1;
+		Cursor cursorOrderNum = dbRead.rawQuery("select ordernum from measure_data_detail where UID=? order by ordernum desc", new String[]{uid});
+		if (cursorOrderNum.moveToFirst()) {
+			countInput = cursorOrderNum.getInt(cursorOrderNum.getColumnIndex("ordernum"));	
+			if (countInput == 0) {
+				countInput = 1;
+			}
+		} else{
+			countInput = 1;
+		}
+		cursorOrderNum.close();
+		
+		Cursor cursorInterval = dbRead.rawQuery("select interval from measure_data_detail where UID=? and isInput = 1 order by ID asc", new String[]{uid});
+		if (cursorInterval.moveToLast()) {
+			interval = cursorInterval.getInt(cursorInterval.getColumnIndex("ordernum"));	
+		} else{
+			interval = 1;
+		}
+		cursorInterval.close();
+		
 		isNewPoint = false;
 		isTempPoint = false;
 		
@@ -100,22 +120,14 @@ public class measureInputActivity extends Activity {
 		setTempPoint.setOnClickListener(new setTempPointListener());
 
 		addNewPoint = (Button)findViewById(R.id.addNewPoint);
-//		addNewPoint.setOnClickListener(new setTempPointListener());
+		addNewPoint.setOnClickListener(new adNewPointListener());
+		
+		chaKanShuJu = (Button)findViewById(R.id.chakanshuju);
+		chaKanShuJu.setOnClickListener(new chaKanShujuListener());
 		
 		this.initYYControl();//初始化语音输入的控件
-		this.initFirstZhuanghao();
 		this.getAllZhuanghao();
-	
-//		chakanshuju = (Button)findViewById(R.id.chakanshuju);
-//		chakanshuju.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View arg0) {
-////				Intent intent = new Intent(measureInputActivity.this, ListBaseAcitivity.class);
-////				intent.putExtra("data", (Serializable)dataList); 
-////				startActivity(intent);
-//			}
-//		});
+		this.initFirstZhuanghao();
 	}
 
 	private void initYYControl(){
@@ -163,8 +175,11 @@ public class measureInputActivity extends Activity {
 			ceZhanInfo.setVisibility(View.VISIBLE);
 			ceDianInput.setVisibility(View.GONE);
 			ceZhanInfo.setText(zhuanghaoFirst);
-			if (constants.containLetter(zhuanghaoFirst)) {
+			if (constants.containLetter(zhuanghaoFirst) && count == 0) {
 				inputOne.setHint("请输入后视数据");
+				inputTwoll.setVisibility(View.GONE);
+			}else if(constants.containLetter(zhuanghaoFirst) && count > 0){
+				inputOne.setHint("请输入前视数据");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(zhuanghaoFirst.equals("0000")){
 				inputOne.setHint("请输入前视数据");
@@ -235,11 +250,20 @@ public class measureInputActivity extends Activity {
 			//如果测站点和取出的点相等，则照常判断存储
 			if (zhuanghaoCurrent.equals(ceZhanInfo.getText().toString())) {
 				//包含大写字母则为基准点
-				if (constants.containLetter(zhuanghaoCurrent)) {
+				if (constants.containLetter(zhuanghaoCurrent) && count == 0) {
 					houshi = inputOne.getText().toString();//获取后视数据
 					qianshi = "0000";
 					zhongshi = "0000";
 					if (houshi == null || houshi.length() <= 0) {
+						Toast.makeText(getApplicationContext(), "请确保数据输入", Toast.LENGTH_SHORT).show();
+						return;
+					}
+					
+				}else if(constants.containLetter(zhuanghaoCurrent) && count > 0){
+					qianshi = inputOne.getText().toString();//获取后视数据
+					houshi = "0000";
+					zhongshi = "0000";
+					if (qianshi == null || qianshi.length() <= 0) {
 						Toast.makeText(getApplicationContext(), "请确保数据输入", Toast.LENGTH_SHORT).show();
 						return;
 					}
@@ -320,9 +344,22 @@ public class measureInputActivity extends Activity {
 				String startPoint = getStartPoint(uid);
 				//取出结束水准点
 				String endPoint = getEndPoint(uid);
-				//把结束时间，起始点，结束点插入表
+				//把结束时间，起始点，结束点和文件路径插入表
 				dbWrite.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=?, flag=? where ID=?",
 						new Object[]{endTime, startPoint, endPoint, flag, uid});
+				
+				//判断是否还有下一组数据要测
+				if (zhuanghaoList.size() -1 == count) {
+					System.out.println("测量完成");
+					Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_SHORT).show();
+					finish();
+				}else{
+					interval++;
+					count = 0;
+					//清除桩号列表，重新加载
+					zhuanghaoList.clear();
+					getAllZhuanghao();
+				}		
 				
 				progressDialog.dismiss();
 				return;
@@ -343,8 +380,12 @@ public class measureInputActivity extends Activity {
 			ceZhanInfo.setVisibility(View.VISIBLE);
 			ceDianInput.setVisibility(View.GONE);
 			ceZhanInfo.setText(zhuanghaoNext);
-			if (constants.containLetter(zhuanghaoNext)) {
+			if (constants.containLetter(zhuanghaoNext) && count == 0) {
 				inputOne.setHint("请输入后视数据");
+				inputOne.setText("");
+				inputTwoll.setVisibility(View.GONE);
+			}else if(constants.containLetter(zhuanghaoNext) && count > 0){
+				inputOne.setHint("请输入前视数据");
 				inputOne.setText("");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(zhuanghaoNext.equals("0000")){
@@ -363,25 +404,46 @@ public class measureInputActivity extends Activity {
 		//获取起始水准点
 		private String getStartPoint(String UID){
 			String houshiString = "";
+			String zhuanghaoTep = "";
 			
-			Cursor cursor = dbRead.rawQuery("select houshi from measure_data_detail where UID=? and ordernum=1", new String[]{UID});
-			while (cursor.moveToNext()) {
-				houshiString = cursor.getString(cursor.getColumnIndex("houshi"));	
-			}	
-			cursor.close();
-			return houshiString;
+			Cursor cursor = dbRead.rawQuery("select houshi, zhuanghao from measure_data_detail where UID=? and interval=? order by ordernum asc", new String[]{UID, interval+""});
+			if (cursor.moveToFirst()) {
+				houshiString = cursor.getString(cursor.getColumnIndex("houshi"));
+				zhuanghaoTep = cursor.getString(cursor.getColumnIndex("zhuanghao"));
+				if (constants.containLetter(zhuanghaoTep)) {
+					cursor.close();
+					return houshiString;
+				}else{
+					cursor.close();
+					return null;
+				}
+			}else{
+				cursor.close();
+				return null;
+			}
+			
 		}
 		
 		//获取终止水准点
 		private String getEndPoint(String UID){
 			String qianshiString = "";
+			String zhuanghaoTep = "";
 			
-			Cursor cursor = dbRead.rawQuery("select qianshi from measure_data_detail where UID=? and ordernum=?", new String[]{UID, countInput+""});
-			while (cursor.moveToNext()) {
+			Cursor cursor = dbRead.rawQuery("select qianshi, zhuanghao from measure_data_detail where UID=? and interval=? order by ordernum asc", new String[]{UID, (interval+1)+""});
+			if (cursor.moveToFirst()) {
 				qianshiString = cursor.getString(cursor.getColumnIndex("qianshi"));	
-			}	
-			cursor.close();
-			return qianshiString;
+				zhuanghaoTep = cursor.getString(cursor.getColumnIndex("zhuanghao"));
+				if (constants.containLetter(zhuanghaoTep)) {
+					cursor.close();
+					return qianshiString;
+				}else{
+					cursor.close();
+					return null;
+				}
+			}else{
+				cursor.close();
+				return null;
+			}
 		}
 	}
 	
@@ -410,6 +472,15 @@ public class measureInputActivity extends Activity {
 			inputOne.setText("");
 			inputTwoll.setVisibility(View.GONE);
 			isNewPoint = true;
+		}
+	}
+	
+	class chaKanShujuListener implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(measureInputActivity.this, CompleteDetailListAcitivity.class);
+			intent.putExtra("ID", uid);
+			startActivity(intent);
 		}
 	}
 }

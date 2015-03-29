@@ -17,7 +17,8 @@
         <EditText
             android:id="@+id/manCode_one"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
@@ -25,8 +26,8 @@
 
         <Button
             android:id="@+id/manCode_One_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -41,7 +42,8 @@
         <EditText
             android:id="@+id/manCode_two"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
@@ -49,8 +51,8 @@
 
         <Button
             android:id="@+id/manCode_two_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -65,7 +67,8 @@
         <EditText
             android:id="@+id/manCode_three"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
+            android:textSize="30dp"
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
@@ -73,8 +76,8 @@
 
         <Button
             android:id="@+id/manCode_three_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -88,7 +91,8 @@
 
         <EditText android:id="@+id/instrumentCode" 
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
+        android:textSize="30dp"
         android:layout_weight="1"
         android:background="@drawable/et2"
         android:inputType="numberDecimal"
@@ -96,8 +100,8 @@
 
         <Button
             android:id="@+id/instrumentCode_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -108,21 +112,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:gravity="center"
+        android:gravity="bottom"
+        android:layout_gravity="bottom"
         android:orientation="horizontal" >
         
         <RadioGroup android:id="@+id/radioGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:background="@color/white"
+            android:orientation="horizontal">
             
             <RadioButton android:id="@+id/RadioOneMeasure"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="30dp"
+                android:layout_marginRight="10dp"
                 android:text="一平"/>
             
              <RadioButton android:id="@+id/RadioTwoMeasure"
                  android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="30dp"
                 android:text="二平"/>
             
         </RadioGroup>
@@ -138,9 +149,13 @@
 		android:orientation="vertical" >
 		<Button android:id="@+id/startMeasure"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
+			android:layout_height="60dp"
 			android:layout_marginBottom="0dp"
-			android:text="开始测量" />
+			android:background="@color/lakeBlue1"
+			android:textColor="@color/white"
+			android:textSize="25dp"
+			android:textStyle="bold"
+			android:text="导入测量文件" />
     
 	</LinearLayout>
 
