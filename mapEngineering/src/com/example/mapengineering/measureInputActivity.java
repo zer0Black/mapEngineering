@@ -6,12 +6,14 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -56,6 +58,7 @@ public class measureInputActivity extends Activity {
 	private LinearLayout inputTwoll;
 	private Boolean isTempPoint;//是否是转点
 	private Boolean isNewPoint;//是否是新增点
+	private Boolean isModifyPoint;//是否是新增点
 	
 	private SharedPreferences mPreferences;
 	DatabaseHelper databaseHelper;
@@ -82,7 +85,7 @@ public class measureInputActivity extends Activity {
 		count = 0;//初始化为0
 		Cursor cursorOrderNum = dbRead.rawQuery("select ordernum from measure_data_detail where UID=? order by ordernum desc", new String[]{uid});
 		if (cursorOrderNum.moveToFirst()) {
-			countInput = cursorOrderNum.getInt(cursorOrderNum.getColumnIndex("ordernum"));	
+			countInput = cursorOrderNum.getInt(cursorOrderNum.getColumnIndex("ordernum")) + 1;	
 			if (countInput == 0) {
 				countInput = 1;
 			}
@@ -93,7 +96,8 @@ public class measureInputActivity extends Activity {
 		
 		Cursor cursorInterval = dbRead.rawQuery("select interval from measure_data_detail where UID=? and isInput = 1 order by ID asc", new String[]{uid});
 		if (cursorInterval.moveToLast()) {
-			interval = cursorInterval.getInt(cursorInterval.getColumnIndex("ordernum"));	
+			interval = cursorInterval.getInt(cursorInterval.getColumnIndex("interval"));
+			System.out.println("interval="+interval);
 		} else{
 			interval = 1;
 		}
@@ -101,6 +105,7 @@ public class measureInputActivity extends Activity {
 		
 		isNewPoint = false;
 		isTempPoint = false;
+		isModifyPoint = false;
 		
 		zhuanghaoList = new ArrayList<String>();
 		
@@ -124,6 +129,21 @@ public class measureInputActivity extends Activity {
 		
 		chaKanShuJu = (Button)findViewById(R.id.chakanshuju);
 		chaKanShuJu.setOnClickListener(new chaKanShujuListener());
+		
+		ceZhanInfo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ceZhanInfo.setVisibility(View.GONE);
+				ceDianInput.setVisibility(View.VISIBLE);
+				ceDianInput.setHint("请输入测点");
+				ceDianInput.setText("");
+				inputOne.setHint("请输入中式数据");
+				inputOne.setText("");
+				inputTwoll.setVisibility(View.GONE);
+				isModifyPoint = true;
+			}
+		});
 		
 		this.initYYControl();//初始化语音输入的控件
 		this.getAllZhuanghao();
@@ -161,7 +181,8 @@ public class measureInputActivity extends Activity {
 	}
 	
 	private void getAllZhuanghao(){
-		Cursor cursor = dbRead.rawQuery("select zhuanghao from measure_data_detail where UID=?, isInput=0, ordernum=0", new String[]{uid});
+		zhuanghaoList.clear();
+		Cursor cursor = dbRead.rawQuery("select zhuanghao from measure_data_detail where UID=? and isInput=0 and ordernum=0", new String[]{uid});
 		while(cursor.moveToNext()){
 			zhuanghaoList.add(cursor.getString(cursor.getColumnIndex("zhuanghao")));
 		}
@@ -236,6 +257,17 @@ public class measureInputActivity extends Activity {
 			showTip(error.getPlainDescription(true));
 		}
 	};
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                 && event.getRepeatCount() == 0) {
+        	Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
+			startActivity(intent);
+             return true;
+         }
+         return super.onKeyDown(keyCode, event);
+     }
 
 //----------------------------class类分割线---------------------------
 	class finishInputListener implements OnClickListener{
@@ -248,7 +280,7 @@ public class measureInputActivity extends Activity {
 			String zhuanghaoCurrent = zhuanghaoList.get(count);
 
 			//如果测站点和取出的点相等，则照常判断存储
-			if (zhuanghaoCurrent.equals(ceZhanInfo.getText().toString())) {
+			if (!isModifyPoint && !isNewPoint && !isTempPoint) {
 				//包含大写字母则为基准点
 				if (constants.containLetter(zhuanghaoCurrent) && count == 0) {
 					houshi = inputOne.getText().toString();//获取后视数据
@@ -277,6 +309,31 @@ public class measureInputActivity extends Activity {
 						return;
 					}
 					
+					String houshiTmp = "";
+					String qianshiTmp = "";
+					int qianshiAll = 0;//前视和
+					int houshiAll = 0;//后视和
+					int subtract = 0;//差
+					
+					Cursor cursor = dbRead.rawQuery("select houshi, qianshi from measure_data_detail where UID=? and interval=? and zhuanghao='0000'", new String[]{uid, interval+""});
+					while (cursor.moveToNext()) {
+						houshiTmp = cursor.getString(cursor.getColumnIndex("houshi"));
+						qianshiTmp = cursor.getString(cursor.getColumnIndex("qianshi"));
+						
+						qianshiAll += Integer.valueOf(qianshiTmp);
+						houshiAll += Integer.valueOf(houshiTmp);
+					}
+					subtract = houshiAll - qianshiAll;
+					
+					if (houshiAll == 0 || qianshiAll == 0) {
+						gaoChaTextView.setText("暂无");
+					}else{
+						gaoChaTextView.setText(subtract);
+					}
+
+					cursor.close();
+					
+					
 				}else {
 					houshi = "0000";
 					qianshi = "0000";
@@ -301,8 +358,32 @@ public class measureInputActivity extends Activity {
 						Toast.makeText(getApplicationContext(), "请确保数据输入", Toast.LENGTH_SHORT).show();
 						return;
 					}
-					dbWrite.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi, zhongshi, houshi, isInput, ordernum)" +
-							"values(?,?,?,?,?,?,?)", new Object[]{uid, zhuanghaoTemp, qianshi, zhongshi, houshi, 1, countInput});
+					dbWrite.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi, zhongshi, houshi, isInput, ordernum, interval)" +
+							" values(?,?,?,?,?,?,?,?)", new Object[]{uid, zhuanghaoTemp, qianshi, zhongshi, houshi, 1, countInput, interval});
+					
+					String houshiTmp = "";
+					String qianshiTmp = "";
+					int qianshiAll = 0;//前视和
+					int houshiAll = 0;//后视和
+					int subtract = 0;//差
+					Cursor cursor = dbRead.rawQuery("select houshi, qianshi from measure_data_detail where UID='" + uid + "' and interval= " + interval + " and zhuanghao='0000'", new String[]{});
+					System.out.println("sql = select houshi, qianshi from measure_data_detail where UID='" + uid + "' and interval= " + interval + " and zhuanghao='0000'");
+					while (cursor.moveToNext()) {
+						houshiTmp = cursor.getString(cursor.getColumnIndex("houshi"));
+						qianshiTmp = cursor.getString(cursor.getColumnIndex("qianshi"));
+						
+						qianshiAll += Integer.valueOf(qianshiTmp);
+						houshiAll += Integer.valueOf(houshiTmp);
+					}
+					subtract = houshiAll - qianshiAll;
+					
+					if (houshiAll == 0 || qianshiAll == 0) {
+						gaoChaTextView.setText("暂无");
+					}else{
+						gaoChaTextView.setText(subtract+"");
+					}
+					cursor.close();
+					
 				}else if (isNewPoint) {
 					String zhuanghaoTemp = ceDianInput.getText().toString();
 					houshi = "0000";
@@ -312,14 +393,14 @@ public class measureInputActivity extends Activity {
 						Toast.makeText(getApplicationContext(), "请确保数据输入", Toast.LENGTH_SHORT).show();
 						return;
 					}
-					dbWrite.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi, zhongshi, houshi, isInput, ordernum)" +
-							"values(?,?,?,?,?,?,?)", new Object[]{uid, zhuanghaoTemp, qianshi, zhongshi, houshi, 1, countInput});
-				}else{
+					dbWrite.execSQL("insert into measure_data_detail(UID, zhuanghao, qianshi, zhongshi, houshi, isInput, ordernum, interval)" +
+							"values(?,?,?,?,?,?,?,?)", new Object[]{uid, zhuanghaoTemp, qianshi, zhongshi, houshi, 1, countInput, interval});
+				}else if (isModifyPoint){
 					//如果不相等，则判断中式是否有数据，然后更新数据
 					houshi = "0000";
 					qianshi = "0000";
 					zhongshi = inputOne.getText().toString();
-					String zhuanghaoUpdate = ceZhanInfo.getText().toString();
+					String zhuanghaoUpdate = ceDianInput.getText().toString();
 					if (zhongshi == null || zhongshi.length() <= 0) {
 						Toast.makeText(getApplicationContext(), "请确保数据输入", Toast.LENGTH_SHORT).show();
 						return;
@@ -330,7 +411,7 @@ public class measureInputActivity extends Activity {
 			}
 			
 			//如果满足这个条件，则完成一次输入，存储数据,并输出成txt格式的文件
-			if (constants.containLetter(zhuanghaoCurrent) && count > 0) {
+			if (constants.containLetter(zhuanghaoCurrent) && count > 0 && !isNewPoint && !isTempPoint) {
 				progressDialog = ProgressDialog.show(measureInputActivity.this, "", "完成一个测回，正在处理数据...");
 				//获取日期和当前时间
 				Date now = new Date(); 
@@ -352,12 +433,15 @@ public class measureInputActivity extends Activity {
 				if (zhuanghaoList.size() -1 == count) {
 					System.out.println("测量完成");
 					Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_SHORT).show();
-					finish();
+//					finish();
+					Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
+					startActivity(intent);
+					
 				}else{
 					interval++;
 					count = 0;
-					//清除桩号列表，重新加载
-					zhuanghaoList.clear();
+					countInput++;
+					//重新加载
 					getAllZhuanghao();
 				}		
 				
@@ -374,6 +458,7 @@ public class measureInputActivity extends Activity {
 			
 			isTempPoint = false;
 			isNewPoint = false;
+			isModifyPoint = false;
 			
 			String zhuanghaoNext = zhuanghaoList.get(count);
 			//包含大写字母则为基准点
@@ -406,7 +491,7 @@ public class measureInputActivity extends Activity {
 			String houshiString = "";
 			String zhuanghaoTep = "";
 			
-			Cursor cursor = dbRead.rawQuery("select houshi, zhuanghao from measure_data_detail where UID=? and interval=? order by ordernum asc", new String[]{UID, interval+""});
+			Cursor cursor = dbRead.rawQuery("select houshi, zhuanghao, ordernum from measure_data_detail where UID=? and interval=? order by ordernum asc", new String[]{UID, interval+""});
 			if (cursor.moveToFirst()) {
 				houshiString = cursor.getString(cursor.getColumnIndex("houshi"));
 				zhuanghaoTep = cursor.getString(cursor.getColumnIndex("zhuanghao"));
@@ -468,6 +553,7 @@ public class measureInputActivity extends Activity {
 			ceZhanInfo.setVisibility(View.GONE);
 			ceDianInput.setVisibility(View.VISIBLE);
 			ceDianInput.setHint("请输入测点");
+			ceDianInput.setText("");
 			inputOne.setHint("请输入中式数据");
 			inputOne.setText("");
 			inputTwoll.setVisibility(View.GONE);
@@ -483,4 +569,5 @@ public class measureInputActivity extends Activity {
 			startActivity(intent);
 		}
 	}
+
 }

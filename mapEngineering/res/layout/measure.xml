@@ -22,6 +22,7 @@
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
+            android:textStyle="bold"
             android:inputType="numberDecimal" />
 
         <Button
@@ -47,6 +48,7 @@
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
+            android:textStyle="bold"
             android:inputType="numberDecimal" />
 
         <Button
@@ -72,6 +74,7 @@
             android:layout_weight="1"
             android:background="@drawable/et2"
             android:hint="请填写人员代码"
+            android:textStyle="bold"
             android:inputType="numberDecimal" />
 
         <Button
@@ -96,6 +99,7 @@
         android:layout_weight="1"
         android:background="@drawable/et2"
         android:inputType="numberDecimal"
+        android:textStyle="bold"
         android:hint="请填写仪器号"/>
 
         <Button
@@ -154,7 +158,6 @@
 			android:background="@color/lakeBlue1"
 			android:textColor="@color/white"
 			android:textSize="25dp"
-			android:textStyle="bold"
 			android:text="导入测量文件" />
     
 	</LinearLayout>

@@ -75,7 +75,7 @@ public class UnCompleteDetailListAcitivity extends Activity{
 		dataList.clear();
 		
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("select zhuanghao, qianshi, zhongshi, houshi from measure_data_detail where UID=?", new String[]{ID});
+		Cursor cursor = db.rawQuery("select zhuanghao, qianshi, zhongshi, houshi, ordernum from measure_data_detail where UID=? and ordernum != 0 order by ordernum asc", new String[]{ID});
 		while(cursor.moveToNext()){
 			DataDetailModel dataDetailModel = new DataDetailModel();
 			String zhuanghao = cursor.getString(cursor.getColumnIndex("zhuanghao"));

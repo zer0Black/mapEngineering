@@ -19,4 +19,9 @@ public class constants {
 	    	return false;
 	    }
 	}
+	
+    public static String clearSpaceAndLine(String value){
+    	String result = value.replaceAll("\\s+", "");
+    	return result;
+    }
 }

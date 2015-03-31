@@ -26,6 +26,7 @@
         <activity android:name="com.example.mapengineering.measureInputActivity"></activity>
         <activity android:name="com.example.mapengineering.UnCompleteDetailListAcitivity"></activity>
          <activity android:name="com.example.mapengineering.ModifyDataActivity"></activity>
+         <activity android:name="com.example.mapengineering.ImportFileActivity"></activity>
     </application>
     
     <!--连接网络权限,用于执行云端语音能力 -->

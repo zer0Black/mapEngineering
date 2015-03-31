@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 		
 		db.execSQL("CREATE TABLE measure_data_detail (ID INTEGER primary key autoincrement, " +
 				"zhuanghao varchar(20), qianshi varchar(20)," +
-				"zhongshi varchar(20), houshi varchar(20), UID varchar(30)), isInput int, ordernum int, interval int");
+				"zhongshi varchar(20), houshi varchar(20), UID varchar(30), isInput int, ordernum int, interval int)");
 	}
 
 	@Override
