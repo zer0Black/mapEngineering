@@ -23,7 +23,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class OpenFileDialog {
 	public static String tag = "OpenFileDialog";
-	static final public String sRoot = "/"; 
+//	static final public String sRoot = "/"; 
+	static final public String sRoot = constants.getSDPath()+"/mapEngineering"; 
 	static final public String sParent = "..";
 	static final public String sFolder = ".";
 	static final public String sEmpty = "";
@@ -96,7 +97,6 @@ public class OpenFileDialog {
 				files = null;
 			}
 			if(files==null){
-				// ���ʳ���
 				Toast.makeText(getContext(), sOnErrorMsg,Toast.LENGTH_SHORT).show();
 				return -1;
 			}
@@ -107,7 +107,6 @@ public class OpenFileDialog {
 				list = new ArrayList<Map<String, Object>>(files.length);
 			}
 			
-			// �����ȱ����ļ��к��ļ��е������б�
 			ArrayList<Map<String, Object>> lfolders = new ArrayList<Map<String, Object>>();
 			ArrayList<Map<String, Object>> lfiles = new ArrayList<Map<String, Object>>();
 			

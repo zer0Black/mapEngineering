@@ -1,18 +1,21 @@
 package com.example.mapengineering;
 
+import java.io.File;
+import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +37,7 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 public class measureInputActivity extends Activity {	
 	
+	
 	// 语音听写UI
     private RecognizerDialog iatDialog;
     private Toast mToast;
@@ -51,6 +55,7 @@ public class measureInputActivity extends Activity {
 	private Button chaKanShuJu;
 	private Button setTempPoint;
 	private Button addNewPoint;
+	private Button cancel;
 	
 	private Button inputOneYY;
 	private Button inputTwoYY;
@@ -59,6 +64,7 @@ public class measureInputActivity extends Activity {
 	private Boolean isTempPoint;//是否是转点
 	private Boolean isNewPoint;//是否是新增点
 	private Boolean isModifyPoint;//是否是新增点
+	private Boolean isLastNewPoint;//是否最后一个新点
 	
 	private SharedPreferences mPreferences;
 	DatabaseHelper databaseHelper;
@@ -106,6 +112,7 @@ public class measureInputActivity extends Activity {
 		isNewPoint = false;
 		isTempPoint = false;
 		isModifyPoint = false;
+		isLastNewPoint = false;
 		
 		zhuanghaoList = new ArrayList<String>();
 		
@@ -130,18 +137,22 @@ public class measureInputActivity extends Activity {
 		chaKanShuJu = (Button)findViewById(R.id.chakanshuju);
 		chaKanShuJu.setOnClickListener(new chaKanShujuListener());
 		
+		cancel = (Button)findViewById(R.id.cancel);
+		cancel.setOnClickListener(new cancelListener());
+		
 		ceZhanInfo.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				ceZhanInfo.setVisibility(View.GONE);
 				ceDianInput.setVisibility(View.VISIBLE);
-				ceDianInput.setHint("请输入测点");
+				ceDianInput.setHint("测点");
 				ceDianInput.setText("");
-				inputOne.setHint("请输入中式数据");
+				inputOne.setHint("中式数据");
 				inputOne.setText("");
 				inputTwoll.setVisibility(View.GONE);
 				isModifyPoint = true;
+				cancel.setVisibility(View.VISIBLE);
 			}
 		});
 		
@@ -149,6 +160,18 @@ public class measureInputActivity extends Activity {
 		this.getAllZhuanghao();
 		this.initFirstZhuanghao();
 	}
+
+	
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		dbRead.close();
+		dbWrite.close();
+	}
+
+
 
 	private void initYYControl(){
 		// 初始化听写Dialog,如果只使用有UI听写功能,无需创建SpeechRecognizer
@@ -197,17 +220,17 @@ public class measureInputActivity extends Activity {
 			ceDianInput.setVisibility(View.GONE);
 			ceZhanInfo.setText(zhuanghaoFirst);
 			if (constants.containLetter(zhuanghaoFirst) && count == 0) {
-				inputOne.setHint("请输入后视数据");
+				inputOne.setHint("后视数据");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(constants.containLetter(zhuanghaoFirst) && count > 0){
-				inputOne.setHint("请输入前视数据");
+				inputOne.setHint("前视数据");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(zhuanghaoFirst.equals("0000")){
-				inputOne.setHint("请输入前视数据");
+				inputOne.setHint("前视数据");
 				inputTwoll.setVisibility(View.VISIBLE);
-				inputTwo.setHint("请输入后视数据");
+				inputTwo.setHint("后视数据");
 			}else {
-				inputOne.setHint("请输入中式数据");
+				inputOne.setHint("中式数据");
 				inputTwoll.setVisibility(View.GONE);
 			}
 		}
@@ -282,7 +305,7 @@ public class measureInputActivity extends Activity {
 			//如果测站点和取出的点相等，则照常判断存储
 			if (!isModifyPoint && !isNewPoint && !isTempPoint) {
 				//包含大写字母则为基准点
-				if (constants.containLetter(zhuanghaoCurrent) && count == 0) {
+				if ((constants.containLetter(zhuanghaoCurrent) && count == 0)) {
 					houshi = inputOne.getText().toString();//获取后视数据
 					qianshi = "0000";
 					zhongshi = "0000";
@@ -343,9 +366,18 @@ public class measureInputActivity extends Activity {
 						return;
 					}
 				}
-				//存储数据到数据库
-				dbWrite.execSQL("update measure_data_detail set qianshi=?, zhongshi=?, houshi=?, isInput=?, ordernum=? where UID=? and zhuanghao=?", 
-						new Object[]{qianshi, zhongshi, houshi, 1, countInput, uid, zhuanghaoCurrent});
+				
+				if (!isLastNewPoint) {
+					//存储数据到数据库
+					dbWrite.execSQL("update measure_data_detail set qianshi=?, zhongshi=?, houshi=?, isInput=?, ordernum=? where UID=? and zhuanghao=?", 
+							new Object[]{qianshi, zhongshi, houshi, 1, countInput, uid, zhuanghaoCurrent});
+				}else{
+					isLastNewPoint = false;
+					//存储数据到数据库
+					dbWrite.execSQL("update measure_data_detail set houshi=?, isInput=?, ordernum=? where UID=? and zhuanghao=?", 
+							new Object[]{houshi, 1, countInput, uid, zhuanghaoCurrent});
+				}
+				
 				
 			}else{
 				//如果是临时的转点
@@ -408,6 +440,7 @@ public class measureInputActivity extends Activity {
 					dbWrite.execSQL("update measure_data_detail set zhuanghao=? ,qianshi=?, zhongshi=?, houshi=?, isInput=?, ordernum=? where UID=? and zhuanghao=?", 
 							new Object[]{zhuanghaoUpdate, qianshi, zhongshi, houshi, 1, countInput, uid, zhuanghaoCurrent});
 				}
+				cancel.setVisibility(View.VISIBLE);
 			}
 			
 			//如果满足这个条件，则完成一次输入，存储数据,并输出成txt格式的文件
@@ -419,36 +452,72 @@ public class measureInputActivity extends Activity {
 				String DateFormat = d1.format(now);
 				String dateSplit[] = DateFormat.split(" ");
 				String endTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
-				int flag = 1;
 				
 				//取出起始水准点
 				String startPoint = getStartPoint(uid);
 				//取出结束水准点
 				String endPoint = getEndPoint(uid);
 				//把结束时间，起始点，结束点和文件路径插入表
-				dbWrite.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=?, flag=? where ID=?",
-						new Object[]{endTime, startPoint, endPoint, flag, uid});
+				dbWrite.execSQL("update measure_data set endTime=?, startPoint=?, endPoint=? where ID=?",
+						new Object[]{endTime, startPoint, endPoint, uid});
 				
+				
+				String filePath = constants.getSDPath() + "/mapEngineering/measureData/";
+				String fileName = "";
+				Cursor cursor = dbRead.rawQuery("select startTime,startPoint from measure_data where ID=?", new String[]{uid});
+				if (cursor.moveToFirst()) {
+					String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+					String startTime0 = startTime.replaceAll(":", "点");
+					String startPointO = cursor.getString(cursor.getColumnIndex("startPoint"));
+					fileName = startPointO + "-" + startTime0 +"-measure_data.txt";
+				}
+				String content = getStoreData();
+				System.out.println("content="+content);
+				Boolean isFile = writeTxtToFile(content, filePath, fileName);
+				
+				String filePathSql = "";
+				if (isFile) {
+					Cursor cursorFile = dbRead.rawQuery("select filePath from measure_data where ID=?", new String[]{uid});
+					if (cursorFile.moveToNext()){
+						filePathSql = cursorFile.getString(cursorFile.getColumnIndex("filePath"));	
+					}
+					if (filePathSql.equals("无")) {
+						filePathSql = filePath + fileName;
+					}else{
+						filePathSql = filePathSql + "," + filePath + fileName;
+					}
+					cursorFile.close();
+				}
+				dbWrite.execSQL("update measure_data set filePath=? where ID=?",
+						new Object[]{filePathSql, uid});
+				
+				System.out.println("filePath = "+filePathSql);
 				//判断是否还有下一组数据要测
 				if (zhuanghaoList.size() -1 == count) {
+					progressDialog.dismiss();
+					dbWrite.execSQL("update measure_data set flag=? where ID=?",
+							new Object[]{1, uid});
 					System.out.println("测量完成");
 					Toast.makeText(getApplicationContext(), "测量完成", Toast.LENGTH_SHORT).show();
-//					finish();
 					Intent intent = new Intent(measureInputActivity.this, MainActivity.class);
 					startActivity(intent);
-					
+					return;
 				}else{
-					interval++;
-					count = 0;
-					countInput++;
+					isLastNewPoint = true;
+					interval++;	
+					dbWrite.execSQL("update measure_data_detail set ordernum = 0, isInput = 0 where UID=? and interval = ?",
+							new Object[]{uid, interval});
+					
+					count = -1;
+				
 					//重新加载
 					getAllZhuanghao();
 				}		
 				
 				progressDialog.dismiss();
-				return;
 			}
 			
+						
 			if (isTempPoint || isNewPoint) {
 				countInput++;
 			}else{
@@ -465,22 +534,23 @@ public class measureInputActivity extends Activity {
 			ceZhanInfo.setVisibility(View.VISIBLE);
 			ceDianInput.setVisibility(View.GONE);
 			ceZhanInfo.setText(zhuanghaoNext);
+			cancel.setVisibility(View.GONE);
 			if (constants.containLetter(zhuanghaoNext) && count == 0) {
-				inputOne.setHint("请输入后视数据");
+				inputOne.setHint("后视数据");
 				inputOne.setText("");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(constants.containLetter(zhuanghaoNext) && count > 0){
-				inputOne.setHint("请输入前视数据");
+				inputOne.setHint("前视数据");
 				inputOne.setText("");
 				inputTwoll.setVisibility(View.GONE);
 			}else if(zhuanghaoNext.equals("0000")){
-				inputOne.setHint("请输入前视数据");
+				inputOne.setHint("前视数据");
 				inputTwoll.setVisibility(View.VISIBLE);
-				inputTwo.setHint("请输入后视数据");
+				inputTwo.setHint("后视数据");
 				inputOne.setText("");
 				inputTwo.setText("");
 			}else {
-				inputOne.setHint("请输入中式数据");
+				inputOne.setHint("中式数据");
 				inputOne.setText("");
 				inputTwoll.setVisibility(View.GONE);
 			}
@@ -497,7 +567,7 @@ public class measureInputActivity extends Activity {
 				zhuanghaoTep = cursor.getString(cursor.getColumnIndex("zhuanghao"));
 				if (constants.containLetter(zhuanghaoTep)) {
 					cursor.close();
-					return houshiString;
+					return zhuanghaoTep;
 				}else{
 					cursor.close();
 					return null;
@@ -514,13 +584,14 @@ public class measureInputActivity extends Activity {
 			String qianshiString = "";
 			String zhuanghaoTep = "";
 			
-			Cursor cursor = dbRead.rawQuery("select qianshi, zhuanghao from measure_data_detail where UID=? and interval=? order by ordernum asc", new String[]{UID, (interval+1)+""});
+			Cursor cursor = dbRead.rawQuery("select qianshi, zhuanghao from measure_data_detail where UID=? and interval=? order by ID asc", new String[]{UID, (interval+1)+""});
 			if (cursor.moveToFirst()) {
 				qianshiString = cursor.getString(cursor.getColumnIndex("qianshi"));	
 				zhuanghaoTep = cursor.getString(cursor.getColumnIndex("zhuanghao"));
+				System.out.println("endPoint="+zhuanghaoTep);
 				if (constants.containLetter(zhuanghaoTep)) {
 					cursor.close();
-					return qianshiString;
+					return zhuanghaoTep;
 				}else{
 					cursor.close();
 					return null;
@@ -538,12 +609,13 @@ public class measureInputActivity extends Activity {
 			ceDianInput.setVisibility(View.GONE);
 			ceZhanInfo.setVisibility(View.VISIBLE);
 			ceZhanInfo.setText("转点");
-			inputOne.setHint("请输入前视数据");
+			inputOne.setHint("前视数据");
 			inputTwoll.setVisibility(View.VISIBLE);
-			inputTwo.setHint("请输入后视数据");
+			inputTwo.setHint("后视数据");
 			inputOne.setText("");
 			inputTwo.setText("");
 			isTempPoint = true;
+			cancel.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -552,12 +624,13 @@ public class measureInputActivity extends Activity {
 		public void onClick(View v) {
 			ceZhanInfo.setVisibility(View.GONE);
 			ceDianInput.setVisibility(View.VISIBLE);
-			ceDianInput.setHint("请输入测点");
+			ceDianInput.setHint("测点");
 			ceDianInput.setText("");
-			inputOne.setHint("请输入中式数据");
+			inputOne.setHint("中式数据");
 			inputOne.setText("");
 			inputTwoll.setVisibility(View.GONE);
 			isNewPoint = true;
+			cancel.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -569,5 +642,187 @@ public class measureInputActivity extends Activity {
 			startActivity(intent);
 		}
 	}
+	
+	class cancelListener implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			isNewPoint = false;
+			isTempPoint = false;
+			isModifyPoint = false;
+			
+			String zhuanghaoNext = zhuanghaoList.get(count);
+			//包含大写字母则为基准点
+			ceZhanInfo.setVisibility(View.VISIBLE);
+			ceDianInput.setVisibility(View.GONE);
+			ceZhanInfo.setText(zhuanghaoNext);
+			if (constants.containLetter(zhuanghaoNext) && count == 0) {
+				inputOne.setHint("后视数据");
+				inputOne.setText("");
+				inputTwoll.setVisibility(View.GONE);
+				cancel.setVisibility(View.GONE);
+			}else if(constants.containLetter(zhuanghaoNext) && count > 0){
+				inputOne.setHint("前视数据");
+				inputOne.setText("");
+				inputTwoll.setVisibility(View.GONE);
+				cancel.setVisibility(View.GONE);
+			}else if(zhuanghaoNext.equals("0000")){
+				inputOne.setHint("前视数据");
+				inputTwoll.setVisibility(View.VISIBLE);
+				inputTwo.setHint("后视数据");
+				inputOne.setText("");
+				inputTwo.setText("");
+				cancel.setVisibility(View.GONE);
+			}else {
+				inputOne.setHint("中式数据");
+				inputOne.setText("");
+				inputTwoll.setVisibility(View.GONE);
+				cancel.setVisibility(View.GONE);
+			}
+		}
+	}
 
+	private String getStoreData(){
+		StringBuffer stringBuffer = new StringBuffer();
+		
+		String startPointTmp = "";
+		String endPointTmp = "";
+		
+		//取出1、2行数据
+		Cursor cursorFirst = dbRead.rawQuery("select * from measure_data where ID=?", new String[]{uid});
+		while (cursorFirst.moveToNext()) {
+			String mancodeOne = cursorFirst.getString(cursorFirst.getColumnIndex("mancodeOne"));
+			String mancodeTwo = cursorFirst.getString(cursorFirst.getColumnIndex("mancodeTwo"));
+			String mancodeThree = cursorFirst.getString(cursorFirst.getColumnIndex("mancodeThree"));
+			String instrumentCode = cursorFirst.getString(cursorFirst.getColumnIndex("instrumentCode"));
+			String oneOrTwoMeasure = cursorFirst.getString(cursorFirst.getColumnIndex("oneOrTwoMeasure"));
+			int oneOrTwo = 0;
+			if (oneOrTwoMeasure.equals("一平")) {
+				oneOrTwo = 1;
+			}else if(oneOrTwoMeasure.equals("二平")){
+				oneOrTwo = 2;
+			}
+			String startPoint = cursorFirst.getString(cursorFirst.getColumnIndex("startPoint"));
+			String endPoint = cursorFirst.getString(cursorFirst.getColumnIndex("endPoint"));
+			String date = cursorFirst.getString(cursorFirst.getColumnIndex("date"));
+			String startTime = cursorFirst.getString(cursorFirst.getColumnIndex("startTime"));
+			
+			startPointTmp = startPoint;
+			endPointTmp = endPoint;
+			
+			stringBuffer.append(mancodeOne + ",");
+			stringBuffer.append(mancodeTwo + ",");
+			stringBuffer.append(mancodeThree + ",");
+			stringBuffer.append("0,0,");
+			stringBuffer.append(instrumentCode  + ",");
+			stringBuffer.append(oneOrTwo);
+			stringBuffer.append("\r\n");
+			stringBuffer.append("6" + ",");
+			stringBuffer.append(startPoint + ",");
+			stringBuffer.append(endPoint + ",");
+			stringBuffer.append(date + ",");
+			stringBuffer.append(startTime);
+			stringBuffer.append("\r\n");
+			stringBuffer.append("0,0,0,0");
+			stringBuffer.append("\r\n");
+		}
+		//取出详细的数据
+		Cursor cursorTwo = dbRead.rawQuery("select * from measure_data_detail where UID=? and interval = ?", new String[]{uid, interval+""});
+		while (cursorTwo.moveToNext()) {
+			String zhuanghao = cursorTwo.getString(cursorTwo.getColumnIndex("zhuanghao"));
+			String qianshi = cursorTwo.getString(cursorTwo.getColumnIndex("qianshi"));
+			String zhongshi = cursorTwo.getString(cursorTwo.getColumnIndex("zhongshi"));
+			String houshi = cursorTwo.getString(cursorTwo.getColumnIndex("houshi"));
+			
+			if (zhuanghao.equals(startPointTmp)) {
+				qianshi = "0000";
+			}
+			
+			stringBuffer.append(zhuanghao + ",");
+			stringBuffer.append(houshi + ",");
+			stringBuffer.append(zhongshi + ",");
+			stringBuffer.append(qianshi + ",");
+			stringBuffer.append("\r\n");
+		}
+		//取出闭合水准点的那条数据
+		Cursor cursorThree = dbRead.rawQuery("select * from measure_data_detail where UID=? and interval = ?", new String[]{uid, interval+1+""});
+		if (cursorThree.moveToFirst()) {
+			String zhuanghao = cursorThree.getString(cursorThree.getColumnIndex("zhuanghao"));
+			String qianshi = cursorThree.getString(cursorThree.getColumnIndex("qianshi"));
+			String zhongshi = cursorThree.getString(cursorThree.getColumnIndex("zhongshi"));
+			String houshi = cursorThree.getString(cursorThree.getColumnIndex("houshi"));
+			
+			stringBuffer.append(zhuanghao + ",");
+			stringBuffer.append(houshi + ",");
+			stringBuffer.append(zhongshi + ",");
+			stringBuffer.append(qianshi);
+			stringBuffer.append("\r\n");
+		}
+		stringBuffer.append("******");
+		//取出结束时间
+		Cursor cursorFour = dbRead.rawQuery("select endTime from measure_data where ID=?", new String[]{uid});
+		while (cursorFour.moveToNext()) {	
+			String endTime = cursorFour.getString(cursorFour.getColumnIndex("endTime"));
+			
+			stringBuffer.append(endTime);
+			stringBuffer.append("\r\n");
+		}
+		
+		return stringBuffer.toString();
+	}
+	
+	private Boolean writeTxtToFile(String strcontent, String filePath, String fileName) {
+	    //生成文件夹之后，再生成文件，不然会出错
+	    makeFilePath(filePath, fileName);
+	    
+	    String strFilePath = filePath+fileName;
+	    // 每次写入时，都换行写
+	    try {
+	        File file = new File(strFilePath);
+	        if (!file.exists()) {
+	            Log.d("TestFile", "Create the file:" + strFilePath);
+	            file.getParentFile().mkdirs();
+	            file.createNewFile();
+//	            file.mkdirs();
+	        }
+	        System.out.println("----1----");
+	        RandomAccessFile raf = new RandomAccessFile(file, "rwd");
+	        raf.seek(file.length());
+	        raf.write(strcontent.getBytes());
+	        raf.close();
+	        return true;
+	    } catch (Exception e) {
+	        Log.e("TestFile", "Error on write File:" + e);
+	        return false;
+	    }
+	}
+	
+	// 生成文件
+	public File makeFilePath(String filePath, String fileName) {
+	    File file = null;
+	    makeRootDirectory(filePath);
+	    try {
+	        file = new File(filePath + fileName);
+	        if (!file.exists()) {
+	            file.createNewFile();  
+//	        	file.mkdirs();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return file;
+	}
+	 
+	// 生成文件夹
+	public static void makeRootDirectory(String filePath) {
+	    File file = null;
+	    try {
+	        file = new File(filePath);
+	        if (!file.exists()) {
+	            file.mkdir();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 }

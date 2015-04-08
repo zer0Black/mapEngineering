@@ -11,6 +11,7 @@ public class DataModel {
 	private String manCodeOne;
 	private String manCodeTwo;
 	private String manCodeThree;
+	private int isUpload;
 	private int measureType;//测量类型（中平？）
 //	private Boolean isAgainMeasure;//是不是复测
 	private String oneOrTwoMeasure;//一平还是二平
@@ -89,6 +90,12 @@ public class DataModel {
 	}
 	public void setFlag(Boolean flag) {
 		this.flag = flag;
+	}
+	public int getIsUpload() {
+		return isUpload;
+	}
+	public void setIsUpload(int isUpload) {
+		this.isUpload = isUpload;
 	}
 	
 }

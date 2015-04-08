@@ -14,26 +14,24 @@
         
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:orientation="horizontal">
             
-            <TextView android:id="@+id/start_point"
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:textSize="20dp"
+            android:text="起始点："
+            />
+            
+            <TextView android:id="@+id/unstart_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:textSize="20dp"
             android:text="BM11"
             />
-        
-        <TextView android:id="@+id/update_statu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textSize="20dp"
-            android:textColor="@color/red"
-            android:text="文件未上传"
-            />
-            
+         
         </LinearLayout>
         
         <LinearLayout android:layout_width="match_parent"
@@ -42,7 +40,7 @@
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
         
-            <TextView android:id="@+id/start_time"
+            <TextView android:id="@+id/unstart_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
@@ -60,7 +58,7 @@
             android:layout_marginLeft="20dp"
             android:orientation="horizontal">
         
-            <TextView android:id="@+id/delete_measureData"
+            <TextView android:id="@+id/delete_unmeasureData"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="30dp"
@@ -68,24 +66,7 @@
                 android:gravity="center"
                 android:text="删除"/>
             
-            <View android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/gray"/>
-            
-            <TextView android:id="@+id/upload_measureData"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="30dp"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:text="上传"/>
-          
-            
         </LinearLayout>
-        
-        <View android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"/>
         
     </LinearLayout>    
         

@@ -3,11 +3,14 @@ package com.example.mapengineering;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.EncodingUtils;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,6 +28,7 @@ import com.example.mapengineering.util.constants;
 public class ImportFileActivity extends Activity {
 	
 	static private int openfileDialogId = 0;
+	private ProgressDialog progressDialog;
 	
 	private Button openfile;
 	private Button startMeasure;
@@ -56,7 +60,9 @@ public class ImportFileActivity extends Activity {
         startMeasure.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				progressDialog = ProgressDialog.show(ImportFileActivity.this, "", "数据处理中...");
 				storeZhuanghao();
+				progressDialog.dismiss();
 				Intent intent = new Intent(ImportFileActivity.this, measureInputActivity.class);
 				startActivity(intent);
 			}
@@ -70,16 +76,22 @@ public class ImportFileActivity extends Activity {
 			images.put(OpenFileDialog.sRoot, R.drawable.filedialog_root);	
 			images.put(OpenFileDialog.sParent, R.drawable.filedialog_folder_up);	
 			images.put(OpenFileDialog.sFolder, R.drawable.filedialog_folder);	
-			images.put("txt", R.drawable.filedialog_folder);	
+			images.put("txt", R.drawable.filedialog_txt);	
 			images.put(OpenFileDialog.sEmpty, R.drawable.filedialog_root);
 			Dialog dialog = OpenFileDialog.createDialog(id, this, "选择文件", new CallbackBundle() {
 				@Override
 				public void callback(Bundle bundle) {
 					String filepath = bundle.getString("path");
 					String path[] = filepath.split("/");
-					filePath.setText("选择的文件名是\n" + path[path.length - 1]); 
 					filaPathSave = filepath;
-					startMeasure.setEnabled(true);
+					Boolean isOk = checkOutFile();
+					if (isOk) {
+						filePath.setText("您选择的文件名是\n" + path[path.length - 1]); 
+						startMeasure.setEnabled(true);
+					}else{
+						filePath.setText("您选择的文件名是" + path[path.length - 1]
+								+"\n,该文件不符合格式规范"); 
+					}		
 				}
 			}, 
 			".txt;",
@@ -105,7 +117,6 @@ public class ImportFileActivity extends Activity {
 		}finally{
 			return res;
 		}
-		
 	}
 	
 	private void storeZhuanghao(){
@@ -128,5 +139,16 @@ public class ImportFileActivity extends Activity {
 					"values(?,?,?,?,?)", new Object[]{uid, zhuanghaoList[i], 0, 0, interval});
 		}
 		db.close();
+	}
+	
+	private boolean checkOutFile(){
+		String fileData = getFileData();
+		Pattern pattern =Pattern.compile("^(\\w+,)+\\w+$");
+	    Matcher matcher = pattern.matcher(fileData);
+	    if (matcher.find()) {
+	    	return true;
+	    }else{
+	    	return false;
+	    }
 	}
 }

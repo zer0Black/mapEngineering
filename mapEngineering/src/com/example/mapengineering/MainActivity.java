@@ -1,11 +1,13 @@
 package com.example.mapengineering;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.mapengineering.util.constants;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 
@@ -31,17 +33,20 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 
 	private FragmentTabHost  tabHost;
 	public static ArrayList<ActivityStack> fragmentStacks;
-		
+	private long exitTime = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +57,15 @@ public class MainActivity extends FragmentActivity {
 		SpeechUtility.createUtility(getApplicationContext(), SpeechConstant.APPID +"=54ff0bbe");
 		
 //		ExpressApplication.getInstance().addActivity(this);
+		File file = null;
+	    try {
+	        file = new File(constants.getSDPath() + "/mapEngineering");
+	        if (!file.exists()) {
+	            file.mkdir();
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	private void initTabhost() {
@@ -80,5 +94,20 @@ public class MainActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
+	        if((System.currentTimeMillis()-exitTime) > 2000){  
+	            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();                                
+	            exitTime = System.currentTimeMillis();   
+	        } else {
+	            finish();
+	            System.exit(0);
+	        }
+	        return true;   
+	    }
+	    return super.onKeyDown(keyCode, event);
+     }
 
 }

@@ -14,4 +14,6 @@
     <color name="lakeBlue1">#006cff</color>
     <color name="white">#ffffff</color>
     <color name="gray">#ccc</color>
+    <color name="green">#00bf00</color>
+    <color name="red">#ff0000</color>
 </resources>

@@ -8,6 +8,7 @@ import com.example.mapengineering.model.DataModel;
 import com.example.mapengineering.view.DetaildataViewAdapter.ViewHolder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ public class UnCompleteDataAdapter extends BaseAdapter{
 
 	private LayoutInflater mInflater;
 	private List<DataModel> dataList;
+	private Context context;
 	
 	public UnCompleteDataAdapter(Context context, List<DataModel> data){
+		this.context = context;
 		this.mInflater = LayoutInflater.from(context);
 		dataList = data;
 	}
@@ -49,10 +52,10 @@ public class UnCompleteDataAdapter extends BaseAdapter{
              
              holder=new ViewHolder();  
               
-             convertView = mInflater.inflate(R.layout.measure_data, null);
-             holder.startTime = (TextView)convertView.findViewById(R.id.start_time);
-             holder.AgainMeasure = (TextView)convertView.findViewById(R.id.again_measure);
-             holder.measureStyle = (TextView)convertView.findViewById(R.id.measure_style);
+             convertView = mInflater.inflate(R.layout.unmeasure_data, null);
+             holder.startTime = (TextView)convertView.findViewById(R.id.unstart_time);
+             holder.startPoint = (TextView)convertView.findViewById(R.id.unstart_point);
+             holder.delete = (TextView)convertView.findViewById(R.id.delete_unmeasureData);
          
              convertView.setTag(holder);
               
@@ -60,24 +63,29 @@ public class UnCompleteDataAdapter extends BaseAdapter{
              holder = (ViewHolder)convertView.getTag();
          }
 		 
+		 final String ID = dataList.get(position).getID();
 		 String startTime = dataList.get(position).getStartTime();
-		 String measureAgain = dataList.get(position).getOneOrTwoMeasure();
+		 String startPoint = dataList.get(position).getStartPoint();
 		 
-		 String measureStyle = "";
-		 if (dataList.get(position).getMeasureType() == 6) {
-			 measureStyle = "中平";
-		}
-		 
+		 holder.startPoint.setText(startPoint);
 		 holder.startTime.setText(startTime);
-		 holder.AgainMeasure.setText(measureAgain);
-		 holder.measureStyle.setText(measureStyle);
+		 
+		 holder.delete.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent("UNCOMPLETE_DELETE");
+					intent.putExtra("CompleteID", ID);
+					context.sendBroadcast(intent);
+				}
+			});
 		 
 		 return convertView;
 	}
 
 	  public final class ViewHolder{
 	        public TextView startTime;
-	        public TextView AgainMeasure;
-	        public TextView measureStyle;
+	        public TextView startPoint;
+	        public TextView delete;
 	    }
 }

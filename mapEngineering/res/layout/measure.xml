@@ -17,11 +17,11 @@
         <EditText
             android:id="@+id/manCode_one"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textSize="30dp"
+            android:layout_height="60dp"
+            android:textSize="40dp"
             android:layout_weight="1"
-            android:background="@drawable/et2"
-            android:hint="请填写人员代码"
+            
+            android:hint="人员代码"
             android:textStyle="bold"
             android:inputType="numberDecimal" />
 
@@ -29,6 +29,8 @@
             android:id="@+id/manCode_One_yy"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -43,11 +45,11 @@
         <EditText
             android:id="@+id/manCode_two"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textSize="30dp"
+            android:layout_height="60dp"
+            android:textSize="40dp"
             android:layout_weight="1"
-            android:background="@drawable/et2"
-            android:hint="请填写人员代码"
+            
+            android:hint="人员代码"
             android:textStyle="bold"
             android:inputType="numberDecimal" />
 
@@ -55,6 +57,8 @@
             android:id="@+id/manCode_two_yy"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -69,11 +73,11 @@
         <EditText
             android:id="@+id/manCode_three"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:textSize="30dp"
+            android:layout_height="60dp"
+            android:textSize="40dp"
             android:layout_weight="1"
-            android:background="@drawable/et2"
-            android:hint="请填写人员代码"
+            
+            android:hint="人员代码"
             android:textStyle="bold"
             android:inputType="numberDecimal" />
 
@@ -81,6 +85,8 @@
             android:id="@+id/manCode_three_yy"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -94,18 +100,20 @@
 
         <EditText android:id="@+id/instrumentCode" 
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:textSize="30dp"
+        android:layout_height="60dp"
+        android:textSize="40dp"
         android:layout_weight="1"
-        android:background="@drawable/et2"
+        
         android:inputType="numberDecimal"
         android:textStyle="bold"
-        android:hint="请填写仪器号"/>
+        android:hint="仪器号"/>
 
         <Button
             android:id="@+id/instrumentCode_yy"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -157,7 +165,7 @@
 			android:layout_marginBottom="0dp"
 			android:background="@color/lakeBlue1"
 			android:textColor="@color/white"
-			android:textSize="25dp"
+			android:textSize="30dp"
 			android:text="导入测量文件" />
     
 	</LinearLayout>

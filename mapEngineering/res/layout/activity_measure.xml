@@ -17,13 +17,22 @@
                 android:text="输入数据"/>           
         </RelativeLayout>
     
+    <Button android:id="@+id/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lakeBlue1"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:text="取 消"/>
+    
   	<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -52,27 +61,20 @@
   	        	android:textColor="@color/lakeBlue1"
   	        	android:textStyle="bold"
   	        	android:text="BM81"
-  	        	android:textSize="30dp"/>
+  	        	android:textSize="35dp"/>
  		    
  		    <EditText android:id="@+id/cezhandian_edit"
  		        android:layout_width="100dp"
- 		        android:layout_height="wrap_content"
+ 		        android:layout_height="40dp"
  		        android:visibility="gone"
  		        android:inputType="numberDecimal"
         		android:textStyle="bold"
         		android:background="@drawable/et2"
-        		android:textSize="20dp"
+        		android:textSize="30dp"
  		        />
  		    
  		</FrameLayout>
  
- 		
- 		
-       <!--  <Button
-            android:id="@+id/zhuanghao_yy"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/yuyin" /> -->
     </LinearLayout>
     
     <LinearLayout
@@ -90,15 +92,14 @@
         android:inputType="numberDecimal"
         android:textStyle="bold"
         android:maxLength="4"
-        android:background="@drawable/et2"
-        android:textSize="30dp"
+        android:textSize="40dp"
         />
 
         <Button
             android:id="@+id/inputOne_yy"
             android:layout_marginLeft="20dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
     
@@ -117,16 +118,15 @@
         android:layout_height="60dp"
         android:inputType="numberDecimal"
         android:maxLength="4"
-        android:background="@drawable/et2"
         android:textStyle="bold"
-        android:textSize="30dp"
+        android:textSize="40dp"
         />
 
         <Button
             android:id="@+id/inputTwo_yy"
             android:layout_marginLeft="20dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
      
@@ -171,6 +171,7 @@
 			android:textColor="#ffffff"
 			android:gravity="center"
 			android:layout_weight="1"
+			android:textSize="20dp"
 			android:text="设置临时点" />
 		
 		<View android:layout_width="1dp"
@@ -185,6 +186,7 @@
 			android:textColor="#ffffff"
 			android:gravity="center"
 			android:layout_weight="1"
+			android:textSize="20dp"
 			android:text="添加新里程" />
 		
 		<View android:layout_width="1dp"
@@ -199,6 +201,7 @@
 			android:textColor="#ffffff"
 			android:gravity="center"
 			android:layout_weight="1"
+			android:textSize="20dp"
 			android:text="查看数据" />
     
 	</LinearLayout>
@@ -216,12 +219,13 @@
         
 		<Button android:id="@+id/finishInput"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
+			android:layout_height="60dp"
 			android:layout_marginBottom="0dp"
 			android:background="@color/lakeBlue1"
 			android:textColor="#ffffff"
 			android:gravity="center"
 			android:textStyle="bold"
+			android:textSize="25dp"
 			android:text="完成输入" />
     
 	</LinearLayout>

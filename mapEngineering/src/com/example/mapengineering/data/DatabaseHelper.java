@@ -20,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 				"date varchar(15), startTime varchar(30), endTime varchar(30), " +
 				"mancodeOne varchar(15), mancodeTwo varchar(15), mancodeThree varchar(15)," +
 				" startPoint varchar(30), endPoint varchar(30), measureType int," +
-				"oneOrTwoMeasure varchar(10), flag int)");
+				"oneOrTwoMeasure varchar(10), flag int, instrumentCode varchar(30), isUpload int, filePath varchar(100))");
 		
 		db.execSQL("CREATE TABLE measure_data_detail (ID INTEGER primary key autoincrement, " +
 				"zhuanghao varchar(20), qianshi varchar(20)," +

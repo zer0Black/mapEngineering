@@ -36,6 +36,8 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 public class MeasureFragment extends Fragment {
 	
+	
+	
 	// 语音听写UI
     private RecognizerDialog iatDialog;
     private Toast mToast;
@@ -259,12 +261,16 @@ public class MeasureFragment extends Fragment {
 		}
 		
 		//获取日期和当前时间
+		
 		Date now = new Date(); 
 		DateFormat d1 = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
 		String DateFormat = d1.format(now);
 		String dateSplit[] = DateFormat.split(" ");
 		String date = dateSplit[0];
 		String startTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
+		
+
+		System.out.println("startTime="+startTime);
 		
 		long uid = Uid.next();
 		String uidString = uid+"";
@@ -276,7 +282,7 @@ public class MeasureFragment extends Fragment {
 		Editor editor=mPreferences.edit();
 		editor.putString(constants.IDCODER, uidString).commit();
 		//存入数据库
-		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, oneOrTwo, flag);
+		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, oneOrTwo, flag, instrumentCode);
 	
 		Intent intent = new Intent(getActivity(), ImportFileActivity.class);
 		startActivity(intent);
@@ -284,14 +290,14 @@ public class MeasureFragment extends Fragment {
 	
 	private void save(String uid, String date, String startTime, String mancodeOne, 
 			String mancodeTwo, String mancodeThree, int measureType,
-			String oneOrTwoMeasure, int flag){
+			String oneOrTwoMeasure, int flag, String instrumentCode){
 		DatabaseHelper databaseHelper = new DatabaseHelper(this.getActivity());
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		db.execSQL("insert into measure_data(ID, date, startTime ,mancodeOne," +
-				"mancodeTwo, mancodeThree, measureType, oneOrTwoMeasure, flag)" +
-				"values(?,?,?,?,?,?,?,?,?)", new Object[]{uid,
+				"mancodeTwo, mancodeThree, measureType, oneOrTwoMeasure, flag, instrumentCode, isUpload,filePath)" +
+				"values(?,?,?,?,?,?,?,?,?,?,?,?)", new Object[]{uid,
 			date, startTime, mancodeOne, mancodeTwo, mancodeThree, 
-			measureType, oneOrTwoMeasure, flag});
+			measureType, oneOrTwoMeasure, flag, instrumentCode, 0, "无"});
 		
 		db.close();
 	}
@@ -314,4 +320,6 @@ public class MeasureFragment extends Fragment {
 		mToast.setText(str);
 		mToast.show();
 	}
+	
+	
 }

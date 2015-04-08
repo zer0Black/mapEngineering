@@ -3,6 +3,8 @@ package com.example.mapengineering.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.os.Environment;
+
 public class constants {
 
 	public static final String UID="UNION_ID";
@@ -24,4 +26,16 @@ public class constants {
     	String result = value.replaceAll("\\s+", "");
     	return result;
     }
+    
+	public static String getSDPath(){ 
+	       String sdDir = ""; 
+	       boolean sdCardExist = Environment.getExternalStorageState()   
+	                           .equals(Environment.MEDIA_MOUNTED);   //判断sd卡是否存在 
+	       if   (sdCardExist)   
+	       {                               
+	         sdDir = Environment.getExternalStorageDirectory().getPath();//获取跟目录 
+	         System.out.println("sd卡路径="+sdDir);
+	      }   
+	       return sdDir; 
+	}
 }
