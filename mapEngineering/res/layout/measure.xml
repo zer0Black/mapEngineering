@@ -158,16 +158,31 @@
 		android:layout_gravity="bottom"
 		android:layout_weight="0.1"
 		android:gravity="bottom"
-		android:orientation="vertical" >
+		android:orientation="horizontal" >
 		<Button android:id="@+id/startMeasure"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="60dp"
 			android:layout_marginBottom="0dp"
 			android:background="@color/lakeBlue1"
 			android:textColor="@color/white"
-			android:textSize="30dp"
-			android:text="导入测量文件" />
+			android:layout_weight="1"
+			android:textSize="25dp"
+			android:text="导入测站测量" />
     
+		<View android:layout_width="1dp"
+		    android:layout_height="60dp"
+		    android:background="@color/gray"/>
+		
+		<Button android:id="@+id/startMeasureToone"
+			android:layout_width="0dp"
+			android:layout_height="60dp"
+			android:layout_marginBottom="0dp"
+			android:background="@color/lakeBlue1"
+			android:textColor="@color/white"
+			android:textSize="25dp"
+			android:layout_weight="1"
+			android:text="输入测站测量" />
+		
 	</LinearLayout>
 
 </LinearLayout>

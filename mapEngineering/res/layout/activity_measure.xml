@@ -67,7 +67,6 @@
  		        android:layout_width="100dp"
  		        android:layout_height="40dp"
  		        android:visibility="gone"
- 		        android:inputType="numberDecimal"
         		android:textStyle="bold"
         		android:background="@drawable/et2"
         		android:textSize="30dp"

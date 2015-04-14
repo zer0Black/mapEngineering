@@ -52,6 +52,8 @@ public class MeasureFragment extends Fragment {
 	private Button manCodeTwoYYButton;
 	private Button manCodeThreeYYButton;
 	private Button instrumentYYButton;
+	private Button startMeasureToone;
+	
 	
 	private View layoutView;
 	FragmentManager fManager;
@@ -98,6 +100,9 @@ public class MeasureFragment extends Fragment {
 		
 		startMeasureButton = (Button)layoutView.findViewById(R.id.startMeasure);
 		startMeasureButton.setOnClickListener(new startMeasureListener());
+		
+		startMeasureToone = (Button)layoutView.findViewById(R.id.startMeasureToone);
+		startMeasureToone.setOnClickListener(new startMeasureToOne());
 		
 		manCodeOneYYButton = (Button)layoutView.findViewById(R.id.manCode_One_yy);
 		manCodeOneYYButton.setOnClickListener(new View.OnClickListener() {		
@@ -235,6 +240,39 @@ public class MeasureFragment extends Fragment {
 		}
 	}
 	
+	class startMeasureToOne implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			//弹出确认窗口
+			new AlertDialog.Builder(getActivity())
+			.setTitle("开始测量")
+			.setMessage("请检查人员代码，仪器代码，复测与否的完整性，开始测量后这些数据将不能更改")
+			.setCancelable(false)
+			.setPositiveButton("确定",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							storeDataToOne();
+						}
+					})
+			.setNegativeButton("取消",
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(
+								DialogInterface dialog,
+								int which) {
+							// TODO Auto-generated method stub
+							dialog.cancel();
+						}
+					}).show();
+		}
+	}
+	
 	private void storeDataToSql(){
 		String manCodeOne = manCodeOneEdit.getText().toString();
 		String manCodeTwo = manCodeTwoEdit.getText().toString();
@@ -243,16 +281,77 @@ public class MeasureFragment extends Fragment {
 		String oneOrTwo = oneOrTwoMeasure;
 		
 	
-		if (manCodeOne == null || manCodeOne.length() == 0
-				|| manCodeTwo == null || manCodeTwo.length() == 0
-				|| manCodeThree == null || manCodeThree.length() == 0) {
-			Toast.makeText(getActivity(), "人员代码输入不完整，请检查", Toast.LENGTH_LONG).show();
-			return;
+		if (manCodeOne == null || manCodeOne.length() == 0){
+			manCodeOne = "0000";
+		}
+		
+		if (manCodeTwo == null || manCodeTwo.length() == 0) {
+			manCodeTwo = "0000";
+		}
+		
+		if (manCodeThree == null || manCodeThree.length() == 0) {
+			manCodeThree = "0000";
 		}
 		
 		if (instrumentCode == null || instrumentCode.length() == 0) {
-			Toast.makeText(getActivity(), "请输入仪器代码", Toast.LENGTH_LONG).show();
+			instrumentCode = "0000";
+		}
+		
+		if (oneOrTwo == "" || oneOrTwo == null) {
+			Toast.makeText(getActivity(), "请确认是一平还是二平", Toast.LENGTH_LONG).show();
 			return;
+		}
+		
+		//获取日期和当前时间
+		
+		Date now = new Date(); 
+		DateFormat d1 = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,DateFormat.MEDIUM);
+		String DateFormat = d1.format(now);
+		String dateSplit[] = DateFormat.split(" ");
+		String date = dateSplit[0];
+		String startTime = dateSplit[1].substring(0, dateSplit[1].length() - 3);
+		
+
+		System.out.println("startTime="+startTime);
+		
+		long uid = Uid.next();
+		String uidString = uid+"";
+		
+		int measureType = 6;//代表中平
+		int flag = 0;//0代表测量未完成
+		
+		//把ID存入首选项
+		Editor editor=mPreferences.edit();
+		editor.putString(constants.IDCODER, uidString).commit();
+		//存入数据库
+		this.save(uidString, date, startTime, manCodeOne, manCodeTwo, manCodeThree, measureType, oneOrTwo, flag, instrumentCode);
+	
+		Intent intent = new Intent(getActivity(), ImportFileActivity.class);
+		startActivity(intent);
+	}
+	
+	private void storeDataToOne(){
+		String manCodeOne = manCodeOneEdit.getText().toString();
+		String manCodeTwo = manCodeTwoEdit.getText().toString();
+		String manCodeThree = manCodeThreeEdit.getText().toString();
+		String instrumentCode = instrumentCodeEdit.getText().toString();
+		String oneOrTwo = oneOrTwoMeasure;
+		
+	
+		if (manCodeOne == null || manCodeOne.length() == 0){
+			manCodeOne = "0000";
+		}
+		
+		if (manCodeTwo == null || manCodeTwo.length() == 0) {
+			manCodeTwo = "0000";
+		}
+		
+		if (manCodeThree == null || manCodeThree.length() == 0) {
+			manCodeThree = "0000";
+		}
+		
+		if (instrumentCode == null || instrumentCode.length() == 0) {
+			instrumentCode = "0000";
 		}
 		
 		if (oneOrTwo == "" || oneOrTwo == null) {

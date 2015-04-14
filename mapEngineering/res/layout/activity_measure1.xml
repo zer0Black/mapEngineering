@@ -15,14 +15,6 @@
                 android:textColor="#ffffff"
                 android:textSize="18dp"
                 android:text="输入数据"/>
-            
-            <Button android:id="@+id/chakanshuju"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:textSize="14dp"
-                android:textColor="#ffffff"
-                android:text="查看数据"/>
                 
         </RelativeLayout>
     
@@ -33,15 +25,17 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <EditText android:id="@+id/zhuanghao"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:hint="请输入里程"
-        android:layout_weight="1"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
         android:inputType="numberDecimal"
-        android:background="@drawable/et2"
+        android:textStyle="bold"
+        android:maxLength="4"
+        android:textSize="40dp"
+        android:hint="里程"
         />
 
         <Button
@@ -57,15 +51,17 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
         <EditText android:id="@+id/qianshi"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:hint="请输入前视数据"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
         android:inputType="numberDecimal"
-        android:background="@drawable/et2"
+        android:textStyle="bold"
+        android:maxLength="4"
+        android:textSize="40dp"
+        android:hint="前视数据"
         />
 
         <Button
@@ -80,16 +76,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
+        android:gravity="center_horizontal"
         android:layout_marginRight="10dp"
         android:orientation="horizontal" >
 
         <EditText android:id="@+id/zhongshi"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_height="40dp"
-        android:hint="请输入中式数据"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
         android:inputType="numberDecimal"
-        android:background="@drawable/et2"
+        android:textStyle="bold"
+        android:maxLength="4"
+        android:textSize="40dp"
+        android:hint="中视数据"
         />
 
         <Button
@@ -105,15 +103,17 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
          <EditText android:id="@+id/houshi"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_weight="1"
-        android:hint="请输入后视数据"
+        android:layout_width="230dp"
+        android:layout_height="60dp"
         android:inputType="numberDecimal"
-        android:background="@drawable/et2"
+        android:textStyle="bold"
+        android:maxLength="4"
+        android:textSize="40dp"
+        android:hint="后视数据"
         />
 
         <Button
@@ -122,12 +122,6 @@
             android:layout_height="40dp"
             android:background="@drawable/yuyin" />
     </LinearLayout>
-
-    <Button android:id="@+id/nextPoint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="完成输入"/>
     
     
     <LinearLayout
@@ -137,13 +131,17 @@
 		android:layout_weight="0.1"
 		android:gravity="bottom"
 		android:orientation="vertical" >
-		<Button android:id="@+id/finishMeasure"
+        
+			<Button android:id="@+id/finishInputOne"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
+			android:layout_height="60dp"
 			android:layout_marginBottom="0dp"
-			android:textColor="#ff0000"
+			android:background="@color/lakeBlue1"
+			android:textColor="#ffffff"
 			android:gravity="center"
-			android:text="完成测量" />
+			android:textStyle="bold"
+			android:textSize="25dp"
+			android:text="完成输入" />
     
 	</LinearLayout>
     
